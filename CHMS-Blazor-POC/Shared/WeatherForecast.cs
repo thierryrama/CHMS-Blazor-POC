@@ -1,4 +1,4 @@
-namespace CHMS_Blazor_POC.Shared
+namespace StatCan.Chms.Shared
 {
     public class WeatherForecast
     {

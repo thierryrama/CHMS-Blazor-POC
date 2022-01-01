@@ -1,4 +1,7 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using System.Globalization;
+@using Microsoft.AspNetCore.WebUtilities;
+
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -10,3 +13,34 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    [Inject]
+    private ILogger<App> Logger { get; set; }
+
+    [Inject]
+    private CultureManager CultureManager { get; set;  }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set;  }
+
+    /// <summary>
+    /// Intecepts the navigation to detect the <c>culture</c> query parameter set by the <see cref="CultureSelector"/>. When the <c>culture</c> query parameter is detected,
+    /// the culture is changed to its value with the <see cref="CultureManager"/>. Which should trigger any <see cref=CultureChangeAwareComponent"/> to re-render.
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnNavigateAsync(NavigationContext args)
+    {
+        Logger.LogDebug("Navigating to {Path}", args.Path);
+
+        var uri = NavigationManager.ToAbsoluteUri(args.Path);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("culture", out var culture))
+        {
+            if (CultureManager.CurrentCulture.Name != culture)
+            {
+                Logger.LogInformation("Changing culture to {Value}", culture);
+                CultureManager.ChangeCulture(this, new CultureInfo(culture));
+            }
+        }
+    }
+}

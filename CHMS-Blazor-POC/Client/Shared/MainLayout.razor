@@ -1,5 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
+@using System.Globalization;
+
+@inject CultureManager CultureManager
+@inject IStringLocalizer<MainLayout> Loc
+@inject ILogger<MainLayout> Logger
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -7,7 +13,8 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">@Loc["About"]</a>
+            <CultureSelector CurrentCulture="CultureManager.CurrentCulture" SupportedCultures="CultureManager.SupportedCultures" />
         </div>
 
         <article class="content px-4">
@@ -15,3 +22,11 @@
         </article>
     </main>
 </div>
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Logger.LogInformation("OnAfterRender {firstRender}", firstRender);
+        base.OnAfterRender(firstRender);
+    }
+}

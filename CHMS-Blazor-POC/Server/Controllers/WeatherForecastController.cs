@@ -1,7 +1,7 @@
-using CHMS_Blazor_POC.Shared;
+using StatCan.Chms.Shared;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CHMS_Blazor_POC.Server.Controllers
+namespace CHMS.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]

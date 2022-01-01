@@ -1,0 +1,43 @@
+﻿@using System.Globalization
+@inject IStringLocalizer<CultureSelector> Loc
+
+@foreach (var culture in SupportedCultures)
+{
+	@if (!culture.Equals(CurrentCulture))
+	{
+		<a @onclick="() => SetCulture(culture)">@Loc[culture.Name]</a>
+	}
+}
+
+@code {
+	// This component is used to select the culture. However, it's not its responsibility to perform the actual culture change.
+	//
+	// When a culture is selected, this component will set the "culture" query parameter on the current page. Another component has
+	// to detect the query pameter and perform the actual culture change.
+	//
+	// Currently, the actual culture change is performed by hooking to the Router.OnNavigateAsync event. See App.razor.
+
+	[Inject]
+	private NavigationManager NavigationManager { get; set; }
+
+	/// <summary>
+	/// The current culture.
+	/// </summary>
+	[Parameter]
+	public CultureInfo CurrentCulture { get; set; }
+
+	/// <summary>
+	/// The supported cultures to select from.
+	/// </summary>
+	[Parameter]
+	public CultureInfo[] SupportedCultures { get; set; }
+
+	/// <summary>
+	/// Set the culture to the given culture. This will simply set the <c>culture<c> query parameter on the current page.
+	/// </summary>
+	/// <param name="culture">The selected culture</param>
+	private void SetCulture(CultureInfo culture)
+	{
+        NavigationManager.NavigateTo(NavigationManager.GetUriWithQueryParameter("culture", culture.Name));
+	}
+}

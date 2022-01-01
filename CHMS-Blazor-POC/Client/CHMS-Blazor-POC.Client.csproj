@@ -1,16 +1,36 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-    <AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
+    <AssemblyName>StatCan.Chms.Client</AssemblyName>
+    <RootNamespace>StatCan.Chms.Client</RootNamespace>
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Shared\CultureSelector-en.json" />
+    <Content Remove="Shared\CultureSelector-fr.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\Counter-en.json" />
+    <EmbeddedResource Include="Pages\Counter-fr.json" />
+    <EmbeddedResource Include="Shared\CultureSelector-en.json" />
+    <EmbeddedResource Include="Shared\MainLayout-en.json" />
+    <EmbeddedResource Include="Shared\CultureSelector-fr.json" />
+    <EmbeddedResource Include="Shared\MainLayout-fr.json" />
+    <EmbeddedResource Include="Shared\NavMenu-en.json" />
+    <EmbeddedResource Include="Shared\NavMenu-fr.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="SoloX.BlazorJsonLocalization.WebAssembly" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,5 +40,4 @@
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
-
 </Project>
