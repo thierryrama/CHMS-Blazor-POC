@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using StatCan.Chms.Client.Services;
 
-namespace StatCan.Chms.Client.Shared;
+namespace StatCan.Chms.Client.Components.Layout;
 
 /// <summary>
 /// A component that is aware when the cutlture was changed by the <see cref="Services.CultureManager"/>. By default, it re-renders the component on a culture

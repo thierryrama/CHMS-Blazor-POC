@@ -10,20 +10,22 @@
     <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!--ItemGroup>
     <Content Remove="Shared\CultureSelector-en.json" />
     <Content Remove="Shared\CultureSelector-fr.json" />
-  </ItemGroup>
+    <Content Include="Components\Layout\MainLayout.razor.css" />
+    <Content Include="Components\Layout\NavMenu.razor.css" />
+  </ItemGroup-->
 
   <ItemGroup>
+    <EmbeddedResource Include="Components\Layout\CultureSelector-en.json" />
+    <EmbeddedResource Include="Components\Layout\CultureSelector-fr.json" />
+    <EmbeddedResource Include="Components\Layout\MainLayout-en.json" />
+    <EmbeddedResource Include="Components\Layout\MainLayout-fr.json" />
+    <EmbeddedResource Include="Components\Layout\NavMenu-en.json" />
+    <EmbeddedResource Include="Components\Layout\NavMenu-fr.json" />
     <EmbeddedResource Include="Pages\Counter-en.json" />
     <EmbeddedResource Include="Pages\Counter-fr.json" />
-    <EmbeddedResource Include="Shared\CultureSelector-en.json" />
-    <EmbeddedResource Include="Shared\MainLayout-en.json" />
-    <EmbeddedResource Include="Shared\CultureSelector-fr.json" />
-    <EmbeddedResource Include="Shared\MainLayout-fr.json" />
-    <EmbeddedResource Include="Shared\NavMenu-en.json" />
-    <EmbeddedResource Include="Shared\NavMenu-fr.json" />
   </ItemGroup>
 
   <ItemGroup>
