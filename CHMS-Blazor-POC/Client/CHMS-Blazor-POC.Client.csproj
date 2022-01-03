@@ -42,6 +42,35 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\wet-boew" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\bcrumb-mobile.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\bcrumb-rtl.gif" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\bcrumb.gif" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\favicon-mobile.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\favicon.ico" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\sig-blk-en.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\sig-blk-en.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\sig-blk-eng.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\sig-blk-fr.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\sig-blk-fr.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\sig-blk-fra.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\wmms-intra.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\wmms-intra.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\assets\wmms.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\ie8-theme-srv.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\ie8-theme-srv.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\ie8-theme.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\ie8-theme.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\ie8-wet-boew.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\ie8-wet-boew.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\theme-srv.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\theme-srv.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\theme.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\theme.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\wet-boew.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\css\wet-boew.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\js\theme.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\js\theme.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\Licence-fr.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\License-en.txt" />
   </ItemGroup>
 </Project>
