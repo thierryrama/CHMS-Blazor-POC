@@ -33,6 +33,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="SoloX.BlazorJsonLocalization.WebAssembly" Version="1.0.2" />
+    <PackageReference Include="toast_ui.blazor_calendar" Version="1.0.0-beta1.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,5 +75,9 @@
     <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\js\theme.min.js" />
     <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\Licence-fr.txt" />
     <_ContentIncludedByDefault Remove="wwwroot\theme-gc-intranet\License-en.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\SurveyPrompt.razor" />
   </ItemGroup>
 </Project>
