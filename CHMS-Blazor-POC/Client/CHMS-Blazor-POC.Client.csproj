@@ -24,8 +24,6 @@
     <EmbeddedResource Include="Components\Layout\MainLayout-fr.json" />
     <EmbeddedResource Include="Components\Layout\NavMenu-en.json" />
     <EmbeddedResource Include="Components\Layout\NavMenu-fr.json" />
-    <EmbeddedResource Include="Pages\Counter-en.json" />
-    <EmbeddedResource Include="Pages\Counter-fr.json" />
   </ItemGroup>
 
   <ItemGroup>
