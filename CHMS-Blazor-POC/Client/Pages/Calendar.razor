@@ -1,124 +1,81 @@
 @page "/calendar-calendrier"
-@using toast_ui.blazor_calendar.Models
-@using toast_ui.blazor_calendar
-@using System.ComponentModel
-<h3>Calendar</h3>
-<div class="btn-group m-2" role="group" aria-label="Basic example">
-  <button type="button" @onclick=@(()=> ChangeCalendarView(TUICalendarViewName.Month)) class="btn btn-secondary">Month</button>
-  <button type="button" @onclick=@(()=> ChangeCalendarView(TUICalendarViewName.Week)) class="btn btn-secondary">Week</button>
-  <button type="button" @onclick=@(()=> ChangeCalendarView(TUICalendarViewName.Day)) class="btn btn-secondary">Day</button>
-</div>
-<br />
-<div class="btn-group m-2" role="group" aria-label="Basic example">
-    <button type="button" @onclick=@(async ()=> await MoveCalendarView(CalendarMove.Previous)) class="btn btn-secondary">Previous</button>
-    <button type="button" @onclick=@(async ()=> await MoveCalendarView(CalendarMove.Today)) class="btn btn-secondary">Today</button>
-    <button type="button" @onclick=@(async ()=> await MoveCalendarView(CalendarMove.Next)) class="btn btn-secondary">Next</button>
-</div>
-<div>
-    <button type="button" @onclick=@(()=> ScrollToNow()) class="btn btn-secondary">Scroll To Now</button>
-</div>
 
-<div class="d-flex flex-row align-items-center m-2">
-    <div class="pr-2">Scroll To Date:</div>
-    <div class="text-sm-center">
-        <input type="date" value="@selectDate.ToString("MM/dd/yyyy")" @onchange="@(async (e) => await ScrollToDate(DateTimeOffset.Parse(e.Value.ToString())))" />
-    </div>
-</div>
-<div class="btn-group m-2" role="group" aria-label="Basic example">
-<button type="button" @onclick=@(()=> ClearCalendar()) class="btn btn-secondary">Clear Calendar</button>
-</div>
-<TUICalendar 
-    Schedules="Schedules" 
-    CalendarOptions="CalendarOptions" 
-    CalendarProperties="CalendarProps"
-    CalendarViewName="CalendarViewName"
-    @bind-VisibleStartDateRange="StartDate"
-    @bind-VisibleEndDateRange="EndDate"
-    @ref=_calendarRef
-    ></TUICalendar>
-Where is the calendar?
+@inherits CultureChangeAwareComponent
+
+@inject DialogService DialogService
+
+    <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
+        TextProperty="Text" SelectedIndex="2"
+        SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
+        <RadzenDayView/>
+        <RadzenWeekView />
+        <RadzenMonthView />
+    </RadzenScheduler>
+
+@*<EventConsole @ref=@console Class="mt-4" />*@
 
 @code {
-    private DateTimeOffset selectDate = DateTimeOffset.Now;
-    private List<TUISchedule> Schedules = new();
-    private TUICalendarOptions CalendarOptions = new TUICalendarOptions()
+    RadzenScheduler<Appointment> scheduler;
+    //EventConsole console;
+    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+
+    IList<Appointment> appointments = new List<Appointment>
     {
-        useCreationPopup = true,
-        useDetailPopup = true,
-        defaultView = TUICalendarViewName.Month,
-        taskView = false,
-        scheduleView = true
-                
+        new Appointment { Start = DateTime.Today.AddDays(-2), End = DateTime.Today.AddDays(-2), Text = "Birthday" },
+        new Appointment { Start = DateTime.Today.AddDays(-11), End = DateTime.Today.AddDays(-10), Text = "Day off" },
+        new Appointment { Start = DateTime.Today.AddDays(-10), End = DateTime.Today.AddDays(-8), Text = "Work from home" },
+        new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(12), Text = "Online meeting" },
+        new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(13), Text = "Skype call" },
+        new Appointment { Start = DateTime.Today.AddHours(14), End = DateTime.Today.AddHours(14).AddMinutes(30), Text = "Dentist appointment" },
+        new Appointment { Start = DateTime.Today.AddDays(1), End = DateTime.Today.AddDays(12), Text = "Vacation" },
     };
-    private List<TUICalendarProps> CalendarProps;
-    private TUICalendarViewName CalendarViewName;
-    private DateTimeOffset? StartDate = DateTimeOffset.Now;
-    private DateTimeOffset? EndDate = DateTimeOffset.Now;
-    private TUICalendar _calendarRef;
 
-    protected override void OnInitialized()
+    void OnSlotRender(SchedulerSlotRenderEventArgs args) 
     {
-        CalendarProps = new List<TUICalendarProps>();
-        var calendar1 = new TUICalendarProps()
+        // Highlight today in month view
+        if (args.View.Text == "Month" && args.Start.Date == DateTime.Today)
         {
-            id = "1",
-            name = "My Test Calendar",
-            color = "#ffffff",
-            bgColor = "#9e5fff",
-            dragBgColor = "#9e5fff",
-            borderColor = "#9e5fff"
-        };
-        CalendarProps.Add(calendar1);
-        
-        var sched = new TUISchedule()
+            args.Attributes["style"] = "background: rgba(255,220,40,.2);";
+        }
+
+        // Highlight working hours (9-18)
+        if ((args.View.Text == "Week" || args.View.Text == "Day") && args.Start.Hour > 8 && args.Start.Hour < 19)
         {
-            id = Guid.NewGuid().ToString(),
-            calendarId = "1",
-            start = DateTimeOffset.Now,
-            end = DateTimeOffset.Now.AddHours(1),
-            title = "Hello Mand",
-            body = "Todo something special",
-            category = "time",
-            isVisible = true,
-            isAllDay = false,
-            state = "busy"
-        };
-        Schedules.Add(sched);
-        base.OnInitialized();
+            args.Attributes["style"] = "background: rgba(255,220,40,.2);";
+        }
     }
-    
-    async void OnPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+
+    async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
-        await InvokeAsync(() =>
+        //console.Log($"SlotSelect: Start={args.Start} End={args.End}");
+
+        Appointment data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment",
+            new Dictionary<string, object> { { "Start", args.Start }, { "End", args.End } });
+
+        if (data != null)
         {
-            StateHasChanged();
-        });
+            appointments.Add(data);
+            // Either call the Reload method or reassign the Data property of the Scheduler
+            await scheduler.Reload();
+        }
     }
 
-    private void ChangeCalendarView(TUICalendarViewName viewName)
+    async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<Appointment> args)
     {
-        CalendarViewName = viewName;
+        //console.Log($"AppointmentSelect: Appointment={args.Data.Text}");
+
+        await DialogService.OpenAsync<EditAppointmentPage>("Edit Appointment", new Dictionary<string, object> { { "Appointment", args.Data } });
+
+        await scheduler.Reload();
     }
 
-    private async Task MoveCalendarView(CalendarMove move)
+    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Appointment> args)
     {
-        await _calendarRef.MoveCalendar(move);
+        // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
 
+        if (args.Data.Text == "Birthday")
+        {
+            args.Attributes["style"] = "background: red";
+        }
     }
-
-    private async void ClearCalendar()
-    {
-        await _calendarRef.CalendarInterop.Clear();
-    }
-
-    private void ScrollToNow()
-    {
-        _calendarRef.CalendarInterop.ScrollToNow();
-    }
-
-    private async Task ScrollToDate(DateTimeOffset selectedDateTime)
-    {
-        await _calendarRef.CalendarInterop.SetDate(selectedDateTime);
-    }
-
 }
