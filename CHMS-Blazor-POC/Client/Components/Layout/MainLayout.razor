@@ -50,6 +50,18 @@
 </header>
 <!-- Static header ends -->
 <main property="mainContentOfPage" class="container" resource="#wb-main" typeof="WebPageElement">
+	<RadzenCard Class="mt-5 mx-auto text-right">
+		
+		<RadzenProfileMenu>
+			<Template>
+				Signed in as Thierry Ramanampanoharana
+			</Template>
+			<ChildContent>
+				<RadzenProfileMenuItem Text="@Loc["Account.Setting"]" Path="buttons" Icon="account_circle"></RadzenProfileMenuItem>
+				<RadzenProfileMenuItem Text="@Loc["LogOff"]" Path="menu" Icon="logout"></RadzenProfileMenuItem>
+			</ChildContent>
+		</RadzenProfileMenu>
+	</RadzenCard>
 	@Body
 </main>
 <!-- Static footer starts -->
