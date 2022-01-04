@@ -32,7 +32,6 @@
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Radzen.Blazor" Version="3.13.12" />
     <PackageReference Include="SoloX.BlazorJsonLocalization.WebAssembly" Version="1.0.2" />
-    <PackageReference Include="toast_ui.blazor_calendar" Version="1.0.0-beta1.4" />
   </ItemGroup>
 
   <ItemGroup>
