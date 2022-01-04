@@ -1,57 +1,90 @@
 ﻿@inherits CultureChangeAwareComponent
-
+@implements IAsyncDisposable
 @inject IStringLocalizer<NavMenu> Loc
-@inject ILogger<NavMenu> Logger
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">CHMS-Blazor-POC</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" >
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> @Loc["Home"]
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> @Loc["Counter"]
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> @Loc["FetchData"]
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="culture-example-1">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> @Loc["CultureExample"]
-            </NavLink>
-        </div>
-    </nav>
-</div>
+@if (!_removed)
+{
+<nav role="navigation" id="wb-sm" class="wb-menu visible-md visible-lg" data-trgt="mb-pnl" typeof="SiteNavigationElement">
+	<div class="pnl-strt container nvbar">
+		<h2 class="wb-inv">@Loc["Heading"]</h2>
+		<div class="row">
+			<ul class="list-inline menu" role="menubar">
+				<li><a class="item" href="">@Loc["Search"]</a></li>
+				<li><a class="item" href="">@Loc["Cases"]</a></li>
+				<li>
+					<a class="item" href="#booking">@Loc["Booking"]</a>
+					<ul class="sm list-unstyled" id="booking" role="menu">
+						<li><a href="">@Loc["Calendar"]</a></li>
+						<li><a href="">@Loc["DefaultDayTemplate"]</a></li>
+						<li><a href="">@Loc["DefaultSiteTemplate"]</a></li>
+						<li><a href="">@Loc["CreateSite"]</a></li>
+					</ul>
+				</li>
+				<li><a class="item" href="">@Loc["Collection"]</a></li>
+				<li><a class="item" href="">@Loc["Users"]</a></li>
+				<li><a class="item" href="">@Loc["Reports"]</a></li>
+				<li><a class="item" href="">@Loc["Sites"]</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+}
 
 @code {
-    private bool collapseNavMenu = true;
+	private IJSObjectReference? _jsModule;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+	private bool _removed;
 
-    private void ToggleNavMenu()
-    {
-        Logger.LogInformation("ToggleNavMenu");
+	private bool _reinitializeWETMenuPlugin;
 
-        collapseNavMenu = !collapseNavMenu;
-    }
+	[Inject]
+	private IJSRuntime JSRuntime { get; set; }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Logger.LogInformation("OnAfterRender {firstRender}", firstRender);
-        base.OnAfterRender(firstRender);
-    }
+	// 1. WET is loaded with the document and is loaded before the application is loaded by Blazor. It can't automatically load the navigation menu because
+	// it doesn't exist until Blazor loaded the application and renderes this component.
+	//
+	// As such, we have to manually initialize the menu plugin.
+	//
+	// 2. Furthermore, once it's initialized by WET --which is outside Blazor, Blazor loses track of the element.
+	//
+	// As such, on language change, we have to remove, re-insert, and re-initalize the nagivation menu. Otherwise, it doesn't refresh.
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/NavMenu.js");
+			await _jsModule.InvokeVoidAsync("initializeWETMenuPlugin");
+		}
+		else if (_removed)
+		{
+			_removed = false;
+			_reinitializeWETMenuPlugin = true;
+
+			await InvokeAsync(() => StateHasChanged());
+		} else if (_reinitializeWETMenuPlugin)
+		{
+			_reinitializeWETMenuPlugin = false;
+			await _jsModule.InvokeVoidAsync("initializeWETMenuPlugin");
+		}
+	}
+
+	protected override void OnCultureChanged(object sender, CultureChangedArgs args)
+	{
+		_removed = true;
+		// Weird bug between the normal navigation menu and the small window collapsed navigation menu (the mobile panel):
+		//   The language link doesn't get updated in the collapsed nagivation menu.
+		// Some WET Javascript copies the content of the "#wb-lng" section into the "#mb-pnl" div. But because of some race condition between Blazor and the DOM updates, the Javascript
+		// doesn't get the updated link.
+		//
+		// Here we introduce a delibarate delay in the refesh of the normal navigation menu to give allow the <CultureSelctor> to fully refresh first.
+		Task.Run(() => base.OnCultureChanged(sender, args));
+	}
+
+	async ValueTask IAsyncDisposable.DisposeAsync()
+	{
+		if (_jsModule != null)
+		{
+			await _jsModule.DisposeAsync();
+		}
+	}
 }

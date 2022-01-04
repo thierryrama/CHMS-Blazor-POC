@@ -4,29 +4,86 @@
 
 @inject CultureManager CultureManager
 @inject IStringLocalizer<MainLayout> Loc
-@inject ILogger<MainLayout> Logger
+@inject IJSRuntime JS
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">@Loc["About"]</a>
-            <CultureSelector CurrentCulture="CultureManager.CurrentCulture" SupportedCultures="CultureManager.SupportedCultures" />
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-@code {
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Logger.LogInformation("OnAfterRender {firstRender}", firstRender);
-        base.OnAfterRender(firstRender);
-    }
-}
+	<header id="navbar" class="">
+		<div id="wb-bnr" class="container">
+			<section id="wb-lng" class="visible-md visible-lg text-right">
+				<CultureSelector CurrentCulture="@CultureManager.CurrentCulture" SupportedCultures="@CultureManager.SupportedCultures"/>
+			</section>
+			<div class="row">
+				<div class="brand col-xs-8 col-sm-9 col-md-6">
+					<a href="/eng">
+						<img id="header-logo" src='./sig-blk-en.svg' alt="Statistics Canada" />
+					</a>
+				</div>
+				<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn">
+					<h2>Search and menus</h2>
+					<ul class="list-inline text-right chvrn">
+						<li>
+							<a href="#mb-pnl" title="Search and menus" aria-controls="mb-pnl" class="overlay-lnk" role="button">
+								<span class="glyphicon">
+									<span class="glyphicon glyphicon-th-list">
+										<span class="wb-inv">Search and menus</span>
+									</span>
+								</span>
+							</a>
+						</li>
+					</ul>
+					<div id="mb-pnl"></div>
+				</section>
+				<section id="wb-so">
+					<h2 class="wb-inv">Sign-on information</h2>
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12 col-md-6">
+								<span>Signed in as <span class="wb-so-uname">Thierry Ramanampanoharana</span></span>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+		<NavMenu />
+	</header>
+	<!-- Static header ends -->
+	<main property="mainContentOfPage" class="container" resource="#wb-main" typeof="WebPageElement">
+		@Body
+	</main>
+	<!-- Static footer starts -->
+	<footer id="wb-info">
+		<div class="landscape">
+			<nav class="container wb-navcurr">
+				<h2 class="wb-inv">About government</h2>
+				<ul class="list-unstyled colcount-sm-2 colcount-md-3">
+					<li><a href="https://www.canada.ca/en/contact.html">Contact us</a></li>
+					<li><a href="https://www.canada.ca/en/government/dept.html">Departments and agencies</a></li>
+					<li><a href="https://www.canada.ca/en/government/publicservice.html">Public service and military</a></li>
+					<li><a href="https://www.canada.ca/en/news.html">News</a></li>
+					<li><a href="https://www.canada.ca/en/government/system/laws.html">Treaties, laws and regulations</a></li>
+					<li><a href="https://www.canada.ca/en/transparency/reporting.html">Government-wide reporting</a></li>
+					<li><a href="https://pm.gc.ca/eng">Prime Minister</a></li>
+					<li><a href="https://www.canada.ca/en/government/system.html">How government works</a></li>
+					<li><a href="https://open.canada.ca/en/">Open government</a></li>
+				</ul>
+			</nav>
+		</div>
+		<div class="brand">
+			<div class="container">
+				<div class="row">
+					<nav class="col-md-9 col-lg-10 ftr-urlt-lnk">
+						<h2 class="wb-inv">About this site</h2>
+						<ul>
+							<li><a href="https://www.canada.ca/en/social.html">Social media</a></li>
+							<li><a href="https://www.canada.ca/en/mobile.html">Mobile applications</a></li>
+							<li><a href="https://www1.canada.ca/en/newsite.html">About Canada.ca</a></li>
+							<li><a href="https://www.canada.ca/en/transparency/terms.html">Terms and conditions</a></li>
+							<li><a href="https://www.canada.ca/en/transparency/privacy.html">Privacy</a></li>
+						</ul>
+					</nav>
+					<div class="col-xs-6 visible-sm visible-xs tofpg"> <a href="#wb-cont">Top of Page <span class="glyphicon glyphicon-chevron-up"></span></a> </div>
+					<div class="col-xs-6 col-md-3 col-lg-2 text-right"> <img src="./theme-gc-web/assets/wmms-blk.svg" alt="Symbol of the Government of Canada"> </div>
+				</div>
+			</div>
+		</div>
+	</footer>

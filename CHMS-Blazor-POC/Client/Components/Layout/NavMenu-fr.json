@@ -1,6 +1,14 @@
 {
-  "Counter": "[FR] Counter",
-  "FetchData": "[FR] Fetch data",
-  "Home": "[FR] Home",
-  "CultureExample": "[FR] Culture example"
+  "Heading": "Menu",
+  "Search": "[FR] Search",
+  "Cases": "[FR] Cases",
+  "Booking": "[FR] Booking",
+  "Calendar": "[FR] Calendar",
+  "DefaultDayTemplate": "[FR] Default day template",
+  "DefaultSiteTemplate": "[FR] Default site schedule template",
+  "CreateSite": "[FR] Create site",
+  "Collection": "[FR] Collection",
+  "Users": "[FR] Users",
+  "Reports": "[FR] Reports",
+  "Sites": "[FR] Sites"
 }

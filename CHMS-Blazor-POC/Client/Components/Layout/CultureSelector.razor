@@ -1,13 +1,25 @@
-﻿@using System.Globalization
+﻿@inherits CultureChangeAwareComponent
+@using System.Globalization
 @inject IStringLocalizer<CultureSelector> Loc
 
+<h2 class="wb-inv">@Loc["Heading"]</h2>
+<ul class="list-inline margin-bottom-none">
 @foreach (var culture in SupportedCultures)
 {
 	@if (!culture.Equals(CurrentCulture))
 	{
-		<a @onclick="() => SetCulture(culture)">@Loc[culture.Name]</a>
+		<li @key="culture" id="wet-fullhd-lang">
+			<a href="@GetLink(culture)"
+				class="link"
+				hreflang="@culture.TwoLetterISOLanguageName"
+				lang="@culture.TwoLetterISOLanguageName"
+				>
+				@Loc[culture.Name]
+			</a>
+		</li>
 	}
 }
+</ul>
 
 @code {
 	// This component is used to select the culture. However, it's not its responsibility to perform the actual culture change.
@@ -33,11 +45,12 @@
 	public CultureInfo[] SupportedCultures { get; set; }
 
 	/// <summary>
-	/// Set the culture to the given culture. This will simply set the <c>culture<c> query parameter on the current page.
+	/// Get the link to switch the current page to the given culture.
 	/// </summary>
-	/// <param name="culture">The selected culture</param>
-	private void SetCulture(CultureInfo culture)
+	/// <param name="culture">The culture to switch to</param>
+	/// <returns>The link to switch the culture</returns>
+	private String GetLink(CultureInfo culture)
 	{
-        NavigationManager.NavigateTo(NavigationManager.GetUriWithQueryParameter("culture", culture.Name));
+		return NavigationManager.GetUriWithQueryParameter("culture", culture.Name);
 	}
 }

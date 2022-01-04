@@ -1,6 +1,14 @@
 {
-  "Counter": "Counter",
-  "FetchData": "Fetch data",
-  "Home": "Home",
-  "CultureExample": "Culture example"
+  "Heading": "Menu",
+  "Search": "Search",
+  "Cases": "Cases",
+  "Booking": "Booking",
+  "Calendar": "Calendar",
+  "DefaultDayTemplate": "Default day template",
+  "DefaultSiteTemplate": "Default site schedule template",
+  "CreateSite": "Create site",
+  "Collection": "Collection",
+  "Users": "Users",
+  "Reports": "Reports",
+  "Sites": "Sites"
 }
