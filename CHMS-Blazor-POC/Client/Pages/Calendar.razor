@@ -5,7 +5,7 @@
 @inject DialogService DialogService
 
     <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
-        TextProperty="Text" SelectedIndex="2"
+        TextProperty="Text" SelectedIndex="1"
         SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
         <RadzenDayView/>
         <RadzenWeekView />
@@ -21,13 +21,19 @@
 
     IList<Appointment> appointments = new List<Appointment>
     {
-        new Appointment { Start = DateTime.Today.AddDays(-2), End = DateTime.Today.AddDays(-2), Text = "Birthday" },
-        new Appointment { Start = DateTime.Today.AddDays(-11), End = DateTime.Today.AddDays(-10), Text = "Day off" },
-        new Appointment { Start = DateTime.Today.AddDays(-10), End = DateTime.Today.AddDays(-8), Text = "Work from home" },
-        new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(12), Text = "Online meeting" },
-        new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(13), Text = "Skype call" },
-        new Appointment { Start = DateTime.Today.AddHours(14), End = DateTime.Today.AddHours(14).AddMinutes(30), Text = "Dentist appointment" },
-        new Appointment { Start = DateTime.Today.AddDays(1), End = DateTime.Today.AddDays(12), Text = "Vacation" },
+        // Yesterday
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(8).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(0), Text = "John Smith" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(8).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(10).AddMinutes(30), Text = "" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(9).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(0), Text = "" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(9).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(30), Text = "Jane Doe" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(10).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(0), Text = "" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(10).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(30), Text = "Jane Doe" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(0), Text = "" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(30), Text = "Jane Doe" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(14).AddMinutes(0), Text = "" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(14).AddMinutes(30), Text = "Jane Doe" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(15).AddMinutes(0), Text = "" },
+        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(15).AddMinutes(30), Text = "Jane Doe" },
     };
 
     void OnSlotRender(SchedulerSlotRenderEventArgs args) 
@@ -76,6 +82,10 @@
         if (args.Data.Text == "Birthday")
         {
             args.Attributes["style"] = "background: red";
+        }
+        else if (string.IsNullOrEmpty(args.Data.Text))
+        {
+            args.Attributes["style"] = "background: orange";
         }
     }
 }
