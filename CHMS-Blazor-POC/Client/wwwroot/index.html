@@ -17,7 +17,15 @@
 </head>
 
 <body vocab="http://schema.org/" resource="#wb-webpage" typeof="WebPage">
-    <div id="app"><div class="spinner"></div></div>
+    <div id="app">
+        <div class="row">
+            <div class="col-md-12 loading-animation">
+                <div class="spinner center-block">
+                </div>
+                <div class="text-center">Loading / Chargement</div>
+            </div>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -27,7 +35,7 @@
     <script src="./wet-boew/js/jquery/2.2.4/jquery.js"></script>
     <script src="./wet-boew/js/wet-boew.min.js"></script>
     <script src="./theme-gc-web/js/theme.min.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <!--script src="_framework/blazor.webassembly.js"></script-->
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>

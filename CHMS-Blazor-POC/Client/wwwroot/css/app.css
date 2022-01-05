@@ -34,6 +34,11 @@ div.my-4 {
 }
 /* End fix Conflicts between wet and Radzen theme */
 
+.loading-animation {
+    top: 40%;
+    position: absolute;
+}
+
 h1:focus {
     outline: none;
 }
@@ -100,9 +105,6 @@ a, .btn-link {
     width: 80px;
     height: 80px;
     animation: spin 700ms linear infinite;
-    top: 40%;
-    left: 50%;
-    position: absolute;
 }
 
 @keyframes spin {
