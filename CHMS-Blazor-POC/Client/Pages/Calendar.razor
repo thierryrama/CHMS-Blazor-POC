@@ -1,12 +1,14 @@
 @page "/calendar-calendrier"
 
+@using StatCan.Chms.Client.Components.Booking
 @inherits CultureChangeAwareComponent
 
 @inject DialogService DialogService
+@inject IStringLocalizer<Calendar> Loc
 
     <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
-        TextProperty="Text" SelectedIndex="1"
-        SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
+        TextProperty="Display" SelectedIndex="1"
+        AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
         <RadzenDayView/>
         <RadzenWeekView />
         <RadzenMonthView />
@@ -19,50 +21,32 @@
     //EventConsole console;
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
 
-    IList<Appointment> appointments = new List<Appointment>
-    {
-        // Yesterday
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(8).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(0), Text = "John Smith" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(8).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(10).AddMinutes(30), Text = "" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(9).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(0), Text = "" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(9).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(30), Text = "Jane Doe" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(10).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(0), Text = "" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(10).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(30), Text = "Jane Doe" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(0), Text = "" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(11).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(30), Text = "Jane Doe" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(14).AddMinutes(0), Text = "" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(12).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(14).AddMinutes(30), Text = "Jane Doe" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(0), End = DateTime.Today.AddDays(-1).AddHours(15).AddMinutes(0), Text = "" },
-        new Appointment { Start = DateTime.Today.AddDays(-1).AddHours(13).AddMinutes(30), End = DateTime.Today.AddDays(-1).AddHours(15).AddMinutes(30), Text = "Jane Doe" },
-    };
+    IList<Appointment> appointments = new List<Appointment>();
 
-    void OnSlotRender(SchedulerSlotRenderEventArgs args) 
+    protected override void OnInitialized()
     {
-        // Highlight today in month view
+        //Yesterday
+        SetUpFakeAppointDayData(-1);
+        //today
+        SetUpFakeAppointDayData();
+        //tomorrow
+        SetUpFakeAppointDayData(1);
+        
+        base.OnInitialized();
+    }
+
+    void OnSlotRender(SchedulerSlotRenderEventArgs args)
+    {
+    // Highlight today in month view
         if (args.View.Text == "Month" && args.Start.Date == DateTime.Today)
         {
             args.Attributes["style"] = "background: rgba(255,220,40,.2);";
         }
 
-        // Highlight working hours (9-18)
+    // Highlight working hours (9-18)
         if ((args.View.Text == "Week" || args.View.Text == "Day") && args.Start.Hour > 8 && args.Start.Hour < 19)
         {
             args.Attributes["style"] = "background: rgba(255,220,40,.2);";
-        }
-    }
-
-    async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
-    {
-        //console.Log($"SlotSelect: Start={args.Start} End={args.End}");
-
-        Appointment data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment",
-            new Dictionary<string, object> { { "Start", args.Start }, { "End", args.End } });
-
-        if (data != null)
-        {
-            appointments.Add(data);
-            // Either call the Reload method or reassign the Data property of the Scheduler
-            await scheduler.Reload();
         }
     }
 
@@ -70,7 +54,14 @@
     {
         //console.Log($"AppointmentSelect: Appointment={args.Data.Text}");
 
-        await DialogService.OpenAsync<EditAppointmentPage>("Edit Appointment", new Dictionary<string, object> { { "Appointment", args.Data } });
+        if (string.IsNullOrEmpty(args.Data.Text))
+        {
+            await DialogService.OpenAsync<AddAppointmentDialog>(@Loc["Make.Appointment"], new Dictionary<string, object> { { "Appointment", args.Data } });
+        }
+        else
+        {
+            await DialogService.OpenAsync<EditAppointmentDialog>(@Loc["Edit.Appointment"], new Dictionary<string, object> { { "Appointment", args.Data } });
+        }
 
         await scheduler.Reload();
     }
@@ -87,5 +78,77 @@
         {
             args.Attributes["style"] = "background: orange";
         }
+    }
+
+    void SetUpFakeAppointDayData(int dayOffset = 0)
+    {
+        var random = new Random();
+        
+        var firstStart = random.Next(8, 10);
+        var secondStart = random.Next(13, 15);
+        
+        new List<Appointment>
+        {
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(firstStart).AddMinutes(0), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 2).AddMinutes(0), Text = "John Smith"
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(firstStart).AddMinutes(30), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 2).AddMinutes(30), Text = ""
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 1).AddMinutes(0), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 1 + 2).AddMinutes(0), Text = ""
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 1).AddMinutes(30), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 1 + 2).AddMinutes(30), Text = "Jane Doe"
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 2).AddMinutes(0), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(firstStart + 1 + 2).AddMinutes(0), Text = ""
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(secondStart).AddMinutes(30), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 2).AddMinutes(30), Text = "Dragon Feet"
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 1).AddMinutes(0),
+                End = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 1 + 2).AddMinutes(0), Text = ""
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 1).AddMinutes(30), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 1 + 2).AddMinutes(30), Text = "Hello Poker"
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 2).AddMinutes(0), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 2 + 2).AddMinutes(0), Text = ""
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 2).AddMinutes(30),
+                End = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 2 + 2).AddMinutes(30), Text = "World Trade"
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 3).AddMinutes(0), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 3 + 2).AddMinutes(0), Text = ""
+            },
+            new Appointment
+            {
+                Start = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 3).AddMinutes(30), 
+                End = DateTime.Today.AddDays(dayOffset).AddHours(secondStart + 3 + 2).AddMinutes(30), Text = "Pat Well"
+            },
+        }.ForEach(a => appointments.Add(a));
     }
 }

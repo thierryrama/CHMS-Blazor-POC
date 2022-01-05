@@ -1,6 +1,6 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-/* Fixing Conflicts between wet and Radzen theme */
+/* Start Fixing Conflicts between wet and Radzen theme */
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 100%;
@@ -9,6 +9,30 @@ html, body {
 main {
     font-size: 14px;
 }
+
+/* no underline for Previous/Next button in steps */
+div.rz-steps-buttons a {
+    text-decoration: none;
+}
+
+div.my-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.rz-dialog .row {
+    margin-left: unset;
+    margin-right: unset;
+}
+
+.rz-steps h3 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: unset;
+}
+/* End fix Conflicts between wet and Radzen theme */
 
 h1:focus {
     outline: none;
