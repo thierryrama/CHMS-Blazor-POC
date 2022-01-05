@@ -7,13 +7,13 @@
 <div>
 @if (ViewModel.IsCurrentSiteAvailable())
 {
-    <button class="btn-link" @onclick="ShowSiteSelector">@ViewModel.CycleName / @ViewModel.SiteName</button>
+    <button class="btn-link" style="padding-left: 0px" @onclick="ShowSiteSelector">@ViewModel.CycleName / @ViewModel.SiteName</button>
     <br/>
     @FormattedTime
 }
 else
 {
-    <button class="btn-link" @onclick="ShowSiteSelector">Select a site...</button>
+    <button class="btn-link" style="padding-left: 0px" @onclick="ShowSiteSelector">Select a site...</button>
 }
 </div>
 
