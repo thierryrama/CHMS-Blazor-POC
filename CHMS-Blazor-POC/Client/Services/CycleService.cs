@@ -9,12 +9,12 @@ public class CycleService
         new()
         {
             Id = 100,
-            Name = "Cycle 1"
+            Name = "Cycle 8"
         },
         new()
         {
             Id = 200,
-            Name = "Cycle 2"
+            Name = "Cycle 9"
         }
     };
 

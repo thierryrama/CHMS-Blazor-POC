@@ -4,18 +4,18 @@
 @inject IStringLocalizer<CurrentSite> Loc
 @inject DialogService DialogService
 
+<div>
 @if (ViewModel.IsCurrentSiteAvailable())
 {
-    <div>
-        <button class="btn-link" @onclick="ShowSiteSelector">@ViewModel.CycleName / @ViewModel.SiteName</button>
-        <br/>
-        @FormattedTime
-    </div>
+    <button class="btn-link" @onclick="ShowSiteSelector">@ViewModel.CycleName / @ViewModel.SiteName</button>
+    <br/>
+    @FormattedTime
 }
 else
 {
-    <button class="btn-primary" @onclick="ShowSiteSelector">Select a site...</button>
+    <button class="btn-link" @onclick="ShowSiteSelector">Select a site...</button>
 }
+</div>
 
 @code {
     private System.Timers.Timer? _timer;
