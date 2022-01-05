@@ -56,8 +56,8 @@ public class SiteSelectorViewModel
     {
         await Task.Run(() =>
         {
-            var cycle = Cycles.First(cycle => cycle.Id == Form.Cycle);
-            var site = Sites.First(site => site.Id == Form.Site);
+            Cycle? cycle = Cycles.FirstOrDefault(cycle => cycle.Id == Form.Cycle);
+            Site? site = Sites.FirstOrDefault(site => site.Id == Form.Site);
             
             _appState.ChangeSite(this, cycle, site);
         });
