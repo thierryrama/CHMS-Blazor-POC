@@ -1,0 +1,73 @@
+@inherits CultureChangeAwareComponent
+
+@inject DialogService DialogService
+@inject IStringLocalizer<AddAppointmentDialog> Loc
+@inject IStringLocalizer<App> LocApp
+
+<div class="row my-4">
+    <RadzenSteps Change=@OnChange NextText="@LocApp["Next"]" PreviousText="@LocApp["Previous"]">
+        <Steps>
+            <RadzenStepsItem Text="@Loc["Respondent"]">
+                <div style="min-height: 240px">
+                    <h3>1. @Loc["Select.Respondent"]</h3>
+                    <RadzenDataGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    Data="@Respondents" TItem="Respondent" ColumnWidth="200px" PageSize="3"
+                                    SelectionMode="DataGridSelectionMode.Single" @bind-Value="SelectedRespondent">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Respondent" Property="ClinicID" Title="ClinicID"/>
+                            <RadzenDataGridColumn TItem="Respondent" Property="Name" Title="Name"/>
+                        </Columns>
+                    </RadzenDataGrid>
+                </div>
+            </RadzenStepsItem>
+            <RadzenStepsItem Text="@Loc["Appointment.Time"]" Disabled="SelectedRespondent== null || SelectedRespondent.Count == 0">
+                <div style="min-height: 240px">
+                    <h3>2. @Loc["Confirm.Appointment", SelectedRespondentName]</h3>
+                    <RadzenDropDown AllowClear="true" TValue="string" Class="w-100" Data="@EmptySlots"/>
+                </div>
+            </RadzenStepsItem>
+            <RadzenStepsItem Text="@Loc["Submit.Appointments"]" Disabled="false">
+                <div style="min-height: 240px">
+                    <h3>3. @Loc["Appointment.Summary"]</h3>
+                </div>
+            </RadzenStepsItem>
+        </Steps>
+    </RadzenSteps>
+</div>
+<div class="row">
+    <div class="text-right">
+        <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+        <RadzenButton Click="@((args) => DialogService.Close(true))" Text="OK" Style="width: 120px" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Appointment Appointment { get; set; }
+
+    IList<Respondent>? SelectedRespondent;
+
+    string SelectedRespondentName => SelectedRespondent != null && SelectedRespondent.Count > 0 ? SelectedRespondent[0].Name : "None";
+
+    public IEnumerable<Respondent> Respondents = new List<Respondent>
+    {
+        new Respondent {ClinicID = "111-111-111-111", Name = "John Doe"},
+        new Respondent {ClinicID = "222-222-222-222", Name = "Jane Dow"},
+        new Respondent {ClinicID = "333-333-333-333", Name = "Bill Wong"},
+        new Respondent {ClinicID = "444-444-444-444", Name = "Jack Willow"},
+        new Respondent {ClinicID = "555-555-555-555", Name = "Will Power"},
+        new Respondent {ClinicID = "666-666-666-666", Name = "Ever Light"}
+    };
+
+    public IEnumerable<string> EmptySlots = new List<string> {"8:30 - 10:30", "11:05 - 13:05", "15:00 - 17:00"};
+
+    protected override void OnInitialized()
+    {
+        
+    }
+    
+    void OnChange(int index)
+    {
+        
+    }
+}

@@ -28,6 +28,18 @@
     <EmbeddedResource Include="Components\Layout\SignedInUser-en.json" />
     <EmbeddedResource Include="Components\Layout\SignedInUser-fr.json" />
     <EmbeddedResource Include="Components\Layout\CurrentSite-en.json" />
+    <Content Remove="Components\Booking\AddAppointmentDialog-en.json" />
+    <EmbeddedResource Include="Components\Booking\AddAppointmentDialog-en.json" />
+    <Content Remove="Components\Booking\AddAppointmentDialog-fr.json" />
+    <EmbeddedResource Include="Components\Booking\AddAppointmentDialog-fr.json" />
+    <Content Remove="Pages\Calendar-en.json" />
+    <EmbeddedResource Include="Pages\Calendar-en.json" />
+    <Content Remove="Pages\Calendar-fr.json" />
+    <EmbeddedResource Include="Pages\Calendar-fr.json" />
+    <Content Remove="App-en.json" />
+    <EmbeddedResource Include="App-en.json" />
+    <Content Remove="App-fr.json" />
+    <EmbeddedResource Include="App-fr.json" />
   </ItemGroup>
 
   <ItemGroup>
