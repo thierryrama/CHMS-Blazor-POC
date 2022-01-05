@@ -30,15 +30,25 @@ public class SiteSelectorViewModel
     public async Task InitializeAsync()
     {
         Cycles = await _cycleService.GetCycles();
-
+        
         if (Form.Site != null)
         {
-            await FetchSitesAsync();
+            await FetchSitesAsync(false);
         }
     }
 
     public async Task FetchSitesAsync()
     {
+        await FetchSitesAsync(true);
+    }
+    
+    private async Task FetchSitesAsync(bool resetSelectedSite)
+    {
+        if (resetSelectedSite)
+        {
+            Form.Site = 0;
+        }
+
         Sites = await _cycleService.GetSiteForCycle(Form.Cycle);
     }
 
