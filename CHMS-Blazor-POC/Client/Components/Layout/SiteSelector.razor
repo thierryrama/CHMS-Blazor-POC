@@ -1,0 +1,63 @@
+﻿@page "/site-selector"
+@inherits CultureChangeAwareComponent
+@inject DialogService DialogService
+@inject SiteSelectorViewModel ViewModel
+
+<RadzenTemplateForm TItem="SiteSelectorViewModel.SiteSelectorForm" Data="@ViewModel.Form" Submit="@(async () => OnSubmitAsync())" InvalidSubmit="OnInvalid">
+    <div class="row">
+        <div class="col-md-2">
+            <RadzenLabel Text="Cycle"/>
+        </div>
+        <div class="col-md-10">
+            <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true"
+                            Placeholder="Select..." Data="@ViewModel.Cycles" TextProperty="Name" ValueProperty="Id"
+                            @bind-value="@ViewModel.Form.Cycle" Change="@(async () => await OnCycleChange())"
+                            Name="Cycle"/>
+            <RadzenRequiredValidator Component="Cycle" Text="Cycle is required" Style="display:block" DefaultValue="0"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <RadzenLabel Text="Site"/>
+        </div>
+        <div class="col-md-10">
+            <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true"
+                            Placeholder="Select..." Data="@ViewModel.Sites" TextProperty="Name" ValueProperty="Id"
+                            @bind-value="@ViewModel.Form.Site"
+                            Name="Site"/>
+            <RadzenRequiredValidator Component="Site" Text="Site is required" Style="display:block" DefaultValue="0"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" />
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Select" />
+        </div>
+    </div>
+    
+</RadzenTemplateForm>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.InitializeAsync();
+    }
+    
+    private async Task OnCycleChange()
+    {
+        await ViewModel.FetchSitesAsync();
+    }
+
+    private async Task OnSubmitAsync()
+    {
+        Console.WriteLine($"OnSumbit!! {ViewModel.Form.Cycle} {ViewModel.Form.Site}");
+        
+        await ViewModel.SaveAsync();
+        DialogService.Close();
+    }
+
+    private void OnInvalid()
+    {
+        Console.WriteLine("OnInvalid!!");
+    }
+}

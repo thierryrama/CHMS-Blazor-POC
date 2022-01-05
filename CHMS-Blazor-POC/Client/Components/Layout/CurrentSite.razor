@@ -1,0 +1,66 @@
+﻿@inherits CultureChangeAwareComponent
+@implements IDisposable
+@inject CurrentSiteViewModel ViewModel
+@inject IStringLocalizer<CurrentSite> Loc
+@inject DialogService DialogService
+
+@if (ViewModel.IsCurrentSiteAvailable())
+{
+    <div>
+        <button class="btn-link" @onclick="ShowSiteSelector">@ViewModel.CycleName / @ViewModel.SiteName</button>
+        <br/>
+        @FormattedTime
+    </div>
+}
+else
+{
+    <button class="btn-primary" @onclick="ShowSiteSelector">Select a site...</button>
+}
+
+@code {
+    private System.Timers.Timer? _timer;
+    
+    protected override void OnInitialized()
+    {
+        _timer = new System.Timers.Timer(30000);
+        _timer.Elapsed += RefreshTime!;
+        _timer.Enabled = true;
+        
+        ViewModel.OnSiteChanged += SiteChanged;
+        
+        base.OnInitialized();
+    }
+
+    private void SiteChanged(object? sender, SiteChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    private void RefreshTime(Object sender, System.Timers.ElapsedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
+    private string? FormattedTime
+    {
+        get => ViewModel.Time?.ToString(Loc["TimeFormat"]);
+    }
+
+    private void ShowSiteSelector()
+    {
+        DialogService.Open<SiteSelector>("Select a site");
+    }
+
+    public new void Dispose()
+    {
+        if (_timer != null)
+        {
+            _timer.Elapsed -= RefreshTime;
+            _timer.Enabled = false;
+        }
+
+        ViewModel.OnSiteChanged -= SiteChanged;
+        
+        base.Dispose();
+    }
+}

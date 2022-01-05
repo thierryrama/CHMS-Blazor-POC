@@ -20,10 +20,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Components\Layout\CultureSelector-en.json" />
     <EmbeddedResource Include="Components\Layout\CultureSelector-fr.json" />
+    <EmbeddedResource Include="Components\Layout\CurrentSite-fr.json" />
     <EmbeddedResource Include="Components\Layout\MainLayout-en.json" />
     <EmbeddedResource Include="Components\Layout\MainLayout-fr.json" />
     <EmbeddedResource Include="Components\Layout\NavMenu-en.json" />
     <EmbeddedResource Include="Components\Layout\NavMenu-fr.json" />
+    <EmbeddedResource Include="Components\Layout\SignedInUser-en.json" />
+    <EmbeddedResource Include="Components\Layout\SignedInUser-fr.json" />
+    <EmbeddedResource Include="Components\Layout\CurrentSite-en.json" />
   </ItemGroup>
 
   <ItemGroup>
