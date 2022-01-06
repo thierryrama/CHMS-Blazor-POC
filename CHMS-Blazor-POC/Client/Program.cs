@@ -35,6 +35,6 @@ builder.Services.AddTransient<CurrentSiteViewModel>();
 var host = builder.Build();
 
 var appStateInitializer = host.Services.GetService<AppStateInitializer>();
-await appStateInitializer.InitializeState();
+await appStateInitializer.InitializeStateAsync();
 
 await host.RunAsync();

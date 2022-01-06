@@ -84,21 +84,12 @@ public class CycleService
 
     public async Task<IEnumerable<Cycle>> GetCycles()
     {
-        return await Task.Run(() => _cycles);
+        return await Task.FromResult(_cycles);
     }
 
     public async Task<IEnumerable<Site>> GetSiteForCycle(int cycleId)
     {
-        return await Task.Run(() =>
-        {
-            if (_sitesByCycleId.ContainsKey(cycleId))
-            {
-                return _sitesByCycleId[cycleId];
-            }
-            else
-            {
-                return Enumerable.Empty<Site>();
-            }
-        });
+        var result = _sitesByCycleId.ContainsKey(cycleId) ? _sitesByCycleId[cycleId] : Enumerable.Empty<Site>();
+        return await Task.FromResult(result);
     }
 }

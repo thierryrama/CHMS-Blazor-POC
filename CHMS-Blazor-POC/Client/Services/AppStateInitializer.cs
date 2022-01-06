@@ -11,15 +11,14 @@ public class AppStateInitializer
         _appState = appState;
     }
 
-    public async Task InitializeState()
+    public async Task InitializeStateAsync()
     {
-        await Task.Run(() =>
+        _appState.SignedInUser = new SignedInUser
         {
-            _appState.SignedInUser = new SignedInUser
-            {
-                FirstName = "Thierry",
-                LastName = "Ramanampanoharana"
-            };
-        });
+            FirstName = "Thierry",
+            LastName = "Ramanampanoharana"
+        };
+
+        await Task.CompletedTask;
     }
 }

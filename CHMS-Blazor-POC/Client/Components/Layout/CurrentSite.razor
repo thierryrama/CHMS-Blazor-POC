@@ -51,16 +51,19 @@ else
         DialogService.Open<SiteSelector>("Select a site");
     }
 
-    public new void Dispose()
+    protected override void Dispose(bool disposing)
     {
-        if (_timer != null)
+        if (disposing)
         {
-            _timer.Elapsed -= RefreshTime;
-            _timer.Enabled = false;
-        }
+            if (_timer != null)
+            {
+                _timer.Elapsed -= RefreshTime;
+                _timer.Enabled = false;
+            }
 
-        ViewModel.OnSiteChanged -= SiteChanged;
+            ViewModel.OnSiteChanged -= SiteChanged;
+        }
         
-        base.Dispose();
+        base.Dispose(disposing);
     }
 }

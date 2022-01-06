@@ -35,7 +35,7 @@
 
 	private bool _removed;
 
-	private bool _reinitializeWETMenuPlugin;
+	private bool _reinitializeWetMenuPlugin;
 
 	[Inject]
 	private IJSRuntime JSRuntime { get; set; }
@@ -58,13 +58,13 @@
 		else if (_removed)
 		{
 			_removed = false;
-			_reinitializeWETMenuPlugin = true;
+			_reinitializeWetMenuPlugin = true;
 
 			await InvokeAsync(() => StateHasChanged());
-		} else if (_reinitializeWETMenuPlugin)
+		} else if (_reinitializeWetMenuPlugin)
 		{
-			_reinitializeWETMenuPlugin = false;
-			await _jsModule.InvokeVoidAsync("initializeWETMenuPlugin");
+			_reinitializeWetMenuPlugin = false;
+			await _jsModule!.InvokeVoidAsync("initializeWETMenuPlugin");
 		}
 	}
 
@@ -72,12 +72,12 @@
 	{
 		_removed = true;
 		// Weird bug between the normal navigation menu and the small window collapsed navigation menu (the mobile panel):
-		//   The language link doesn't get updated in the collapsed nagivation menu.
+		//   The language link doesn't get updated in the collapsed navigation menu.
 		// Some WET Javascript copies the content of the "#wb-lng" section into the "#mb-pnl" div. But because of some race condition between Blazor and the DOM updates, the Javascript
 		// doesn't get the updated link.
 		//
-		// Here we introduce a delibarate delay in the refesh of the normal navigation menu to give allow the <CultureSelctor> to fully refresh first.
-		Task.Run(() => base.OnCultureChanged(sender, args));
+		// Here we introduce a deliberate delay in the refresh of the normal navigation menu to allow the <CultureSelector> to fully refresh first.
+		Task.Run(async () => await InvokeAsync(() => base.OnCultureChanged(sender, args)));
 	}
 
 	async ValueTask IAsyncDisposable.DisposeAsync()

@@ -3,7 +3,7 @@
 @inject DialogService DialogService
 @inject SiteSelectorViewModel ViewModel
 
-<RadzenTemplateForm TItem="SiteSelectorViewModel.SiteSelectorForm" Data="@ViewModel.Form" Submit="@(async () => OnSubmitAsync())" InvalidSubmit="OnInvalid">
+<RadzenTemplateForm TItem="SiteSelectorViewModel.SiteSelectorForm" Data="@ViewModel.Form" Submit="OnSubmitAsync" InvalidSubmit="OnInvalidAsync">
     <div class="row">
         <div class="col-md-2">
             <RadzenLabel Text="Cycle"/>
@@ -11,7 +11,7 @@
         <div class="col-md-10">
             <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true"
                             Placeholder="Select..." Data="@ViewModel.Cycles" TextProperty="Name" ValueProperty="Id"
-                            @bind-value="@ViewModel.Form.Cycle" Change="@(async () => await OnCycleChange())"
+                            @bind-value="@ViewModel.Form.Cycle" Change="OnCycleChangeAsync" 
                             Name="Cycle"/>
             <RadzenRequiredValidator Component="Cycle" Text="Cycle is required" Style="display:block" DefaultValue="0"/>
         </div>
@@ -30,7 +30,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 text-right">
-            <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" />
+            <RadzenButton Click="OnCancelAsync" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" />
             <RadzenButton ButtonType="ButtonType.Submit" Text="Select" />
         </div>
     </div>
@@ -43,11 +43,17 @@
         await ViewModel.InitializeAsync();
     }
     
-    private async Task OnCycleChange()
+    private async Task OnCycleChangeAsync()
     {
         await ViewModel.FetchSitesAsync();
     }
 
+    private Task OnCancelAsync()
+    {
+        DialogService.Close();
+        return Task.CompletedTask;
+    }
+    
     private async Task OnSubmitAsync()
     {
         Console.WriteLine($"OnSumbit!! {ViewModel.Form.Cycle} {ViewModel.Form.Site}");
@@ -56,8 +62,10 @@
         DialogService.Close();
     }
 
-    private void OnInvalid()
+    private Task OnInvalidAsync()
     {
-        Console.WriteLine("OnInvalid!!");
+        Console.WriteLine($"OnInvalidAsync!!");
+
+        return Task.CompletedTask;
     }
 }

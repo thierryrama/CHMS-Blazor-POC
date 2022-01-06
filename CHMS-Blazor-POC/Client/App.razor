@@ -25,15 +25,15 @@
     private NavigationManager NavigationManager { get; set;  }
 
     /// <summary>
-    /// Intecepts the navigation to detect the <c>culture</c> query parameter set by the <see cref="CultureSelector"/>. When the <c>culture</c> query parameter is detected,
+    /// Intercepts the navigation to detect the <c>culture</c> query parameter set by the <see cref="CultureSelector"/>. When the <c>culture</c> query parameter is detected,
     /// the culture is changed to its value with the <see cref="CultureManager"/>. Which should trigger any <see cref=CultureChangeAwareComponent"/> to re-render.
     /// </summary>
-    /// <param name="args"></param>
-    private void OnNavigateAsync(NavigationContext args)
+    /// <param name="arg"></param>
+    private Task OnNavigateAsync(NavigationContext arg)
     {
-        Logger.LogDebug("Navigating to {Path}", args.Path);
+        Logger.LogDebug("Navigating to {Path}", arg.Path);
 
-        var uri = NavigationManager.ToAbsoluteUri(args.Path);
+        var uri = NavigationManager.ToAbsoluteUri(arg.Path);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("culture", out var culture))
         {
             if (CultureManager.CurrentCulture.Name != culture)
@@ -42,5 +42,7 @@
                 CultureManager.ChangeCulture(this, new CultureInfo(culture));
             }
         }
+
+        return Task.CompletedTask;
     }
 }
