@@ -1,40 +1,43 @@
-﻿@page "/site-selector"
-@inherits CultureChangeAwareComponent
+﻿@inherits CultureChangeAwareComponent
 @inject DialogService DialogService
 @inject SiteSelectorViewModel ViewModel
 
-<RadzenTemplateForm TItem="SiteSelectorViewModel.SiteSelectorForm" Data="@ViewModel.Form" Submit="OnSubmitAsync" InvalidSubmit="OnInvalidAsync">
+<RadzenTemplateForm TItem="SiteSelectorViewModel.SiteSelectorForm" Data="@ViewModel.Form" Submit="OnSubmitAsync">
     <div class="row">
         <div class="col-md-2">
-            <RadzenLabel Text="Cycle"/>
+            <RadzenLabel Text="Cycle" Component="Cycle"/>
         </div>
         <div class="col-md-10">
-            <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true"
-                            Placeholder="Select..." Data="@ViewModel.Cycles" TextProperty="Name" ValueProperty="Id"
-                            @bind-value="@ViewModel.Form.Cycle" Change="OnCycleChangeAsync" 
-                            Name="Cycle"/>
-            <RadzenRequiredValidator Component="Cycle" Text="Cycle is required" Style="display:block" DefaultValue="0"/>
+            <RadzenDropDown Name="Cycle" TValue="int?"
+                            Data="@ViewModel.Cycles" @bind-Value="@ViewModel.Form.Cycle"
+                            TextProperty="Name" ValueProperty="Id"
+                            Change="OnCycleChangeAsync"
+                            Placeholder="Select..."
+                            AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"/>
+            <RadzenRequiredValidator Component="Cycle" Text="Cycle is required"/>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-2">
-            <RadzenLabel Text="Site"/>
+            <RadzenLabel Text="Site" Component="Site"/>
         </div>
         <div class="col-md-10">
-            <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true"
-                            Placeholder="Select..." Data="@ViewModel.Sites" TextProperty="Name" ValueProperty="Id"
-                            @bind-value="@ViewModel.Form.Site"
-                            Name="Site"/>
-            <RadzenRequiredValidator Component="Site" Text="Site is required" Style="display:block" DefaultValue="0"/>
+            <RadzenDropDown Name="Site" TValue="int?"
+                            Data="@ViewModel.Sites" @bind-Value="@ViewModel.Form.Site"
+                            TextProperty="Name" ValueProperty="Id"
+                            Placeholder="Select..."
+                            AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"/>
+            <RadzenRequiredValidator Component="Site" Text="Site is required"/>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12 text-right">
-            <RadzenButton Click="OnCancelAsync" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" />
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Select" />
+            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Click="OnCancelAsync"/>
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Select"/>
         </div>
     </div>
-    
 </RadzenTemplateForm>
 
 @code {
@@ -47,7 +50,7 @@
     {
         await ViewModel.FetchSitesAsync();
     }
-
+    
     private Task OnCancelAsync()
     {
         DialogService.Close();
@@ -56,16 +59,7 @@
     
     private async Task OnSubmitAsync()
     {
-        Console.WriteLine($"OnSumbit!! {ViewModel.Form.Cycle} {ViewModel.Form.Site}");
-        
         await ViewModel.SaveAsync();
         DialogService.Close();
-    }
-
-    private Task OnInvalidAsync()
-    {
-        Console.WriteLine($"OnInvalidAsync!!");
-
-        return Task.CompletedTask;
     }
 }

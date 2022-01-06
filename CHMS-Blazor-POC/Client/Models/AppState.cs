@@ -12,7 +12,7 @@ public class AppState
     
     public SignedInUser? SignedInUser { get; set; }
 
-    public void ChangeSite(Object sender, Cycle cycle, Site site)
+    public void ChangeSite(object sender, Cycle? cycle, Site? site)
     {
         var args = new SiteChangedEventArgs(CurrentCycle, CurrentSite, cycle, site);
 

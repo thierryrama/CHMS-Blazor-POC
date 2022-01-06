@@ -16,8 +16,8 @@ public class SiteSelectorViewModel
 
         Form = new SiteSelectorForm
         {
-            Cycle = _appState.CurrentCycle?.Id ?? 0,
-            Site = _appState.CurrentSite?.Id ?? 0
+            Cycle = _appState.CurrentCycle?.Id,
+            Site = _appState.CurrentSite?.Id
         };
     }
 
@@ -31,7 +31,7 @@ public class SiteSelectorViewModel
     {
         Cycles = await _cycleService.GetCycles();
         
-        if (Form.Site != null)
+        if (Form.Cycle != null)
         {
             await FetchSitesAsync(false);
         }
@@ -46,18 +46,26 @@ public class SiteSelectorViewModel
     {
         if (resetSelectedSite)
         {
-            Form.Site = 0;
+            Form.Site = null;
         }
 
-        Sites = await _cycleService.GetSiteForCycle(Form.Cycle);
+        if (Form.Cycle == null)
+        {
+            Sites = Enumerable.Empty<Site>();
+            await Task.CompletedTask;
+        }
+        else
+        {
+            Sites = await _cycleService.GetSiteForCycle(Form.Cycle ?? default);            
+        }
     }
 
     public async Task SaveAsync()
     {
         await Task.Run(() =>
         {
-            Cycle? cycle = Cycles.FirstOrDefault(cycle => cycle.Id == Form.Cycle);
-            Site? site = Sites.FirstOrDefault(site => site.Id == Form.Site);
+            var cycle = Cycles.FirstOrDefault(cycle => cycle.Id == Form.Cycle);
+            var site = Sites.FirstOrDefault(site => site.Id == Form.Site);
             
             _appState.ChangeSite(this, cycle, site);
         });
@@ -65,8 +73,8 @@ public class SiteSelectorViewModel
 
     public class SiteSelectorForm
     {
-        public int Cycle { get; set; }
+        public int? Cycle { get; set; }
         
-        public int Site { get; set; }
+        public int? Site { get; set; }
     }
 }
