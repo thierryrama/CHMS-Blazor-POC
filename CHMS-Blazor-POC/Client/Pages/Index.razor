@@ -20,24 +20,24 @@ Welcome to your new app. Hello hotreload. Where are you? What?
 
     protected override void OnInitialized()
     {
-        Logger.LogInformation("OnInitialized");
+        Logger.LogDebug("OnInitialized");
         base.OnInitialized();
     }
 
     protected override void OnParametersSet()
     {
-        Logger.LogInformation("OnParametersSet");
+        Logger.LogDebug("OnParametersSet");
         base.OnParametersSet();
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
-        Logger.LogInformation("OnAfterRender {firstRender}", firstRender);
+        Logger.LogDebug("OnAfterRender {firstRender}", firstRender);
         base.OnAfterRender(firstRender);
     }
 
     public void Dispose()
     {
-        Logger.LogInformation("Dispose");
+        Logger.LogDebug("Dispose");
     }
 }

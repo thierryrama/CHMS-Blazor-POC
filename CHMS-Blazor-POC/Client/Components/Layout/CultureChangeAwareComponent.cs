@@ -33,7 +33,7 @@ public class CultureChangeAwareComponent : ComponentBase, IDisposable
     /// <param name="args">Details of the culture change</param>
     protected virtual void OnCultureChanged(object? sender, CultureChangedArgs args)
     {
-        Logger?.LogInformation("OnCultureChanged in {Type}", this.GetType());
+        Logger?.LogDebug("OnCultureChanged in {Type}, from {Previous} to {New}", this.GetType(), args.OldValue, args.NewValue);
 
         // Should this be wrapped inside InvokeAsync in case the culture change was triggered from outside the renderer's synchronization context?
         // In theory, it shouldn't be necessary because the culture switch usually originate from an event on a component.

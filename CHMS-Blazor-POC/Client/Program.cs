@@ -2,6 +2,7 @@ using StatCan.Chms.Client;
 using StatCan.Chms.Client.Models;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Logging;
 using SoloX.BlazorJsonLocalization;
 using SoloX.BlazorJsonLocalization.WebAssembly;
 using System.Globalization;
@@ -12,6 +13,10 @@ using StatCan.Chms.Client.ViewModels.Layout;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Logging.AddConfiguration(
+    builder.Configuration.GetSection("Logging")
+);
 
 builder.Services.AddWebAssemblyJsonLocalization(
     builder => builder.UseEmbeddedJson()

@@ -38,7 +38,7 @@
         {
             if (CultureManager.CurrentCulture.Name != culture)
             {
-                Logger.LogInformation("Changing culture to {Value}", culture);
+                Logger.LogDebug("Changing culture to {Value}", culture);
                 CultureManager.ChangeCulture(this, new CultureInfo(culture));
             }
         }
