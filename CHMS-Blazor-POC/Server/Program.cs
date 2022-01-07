@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using StatCan.Chms.QueryResolvers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddGraphQLServer()
+    .AddQueryType(q => q.Name("Query"))
+    .AddType<BookingResolver>();
 //builder.Services.AddS
 
 var app = builder.Build();
@@ -31,7 +35,14 @@ app.UseRouting();
 
 
 app.MapRazorPages();
-app.MapControllers();
+
+// Register WebMVC controllers and GraphQL endpoints
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGraphQL();
+    endpoints.MapControllers();
+});
+
 app.MapFallbackToFile("index.html");
 
 app.Run();
