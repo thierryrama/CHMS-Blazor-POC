@@ -97,7 +97,7 @@ Welcome to your new app. Hello hotreload. Where are you? What?
         {
             _summary = null;
             
-            var result = await ChmsGraphQlClient.GetFirstAppointment.ExecuteAsync(true);
+            var result = await ChmsGraphQlClient.GetFirstAppointment.ExecuteAsync(false);
             _details = new Details
                 (
                 SiteId : result.Data.Booking.FirstAppointment.SiteId,
@@ -111,14 +111,14 @@ Welcome to your new app. Hello hotreload. Where are you? What?
         {
             _details = null;
             
-            // var result = await ChmsGraphQlClient.GetSummarizedFirstAppointment.ExecuteAsync();
-            // Logger.LogInformation("Result has errors: {hasErrors}, {errors}", result.Errors.Any(), String.Join(", ", result.Errors.Select(error => error.Message)));
-            // _summary = new Summary
-            //     (
-            //     SiteId: result.Data.FirstAppointment.SiteId,
-            //     Time: result.Data.FirstAppointment.Time,
-            //     Duration: result.Data.FirstAppointment.DurationMinute
-            //     );
+            var result = await ChmsGraphQlClient.GetSummarizedFirstAppointment.ExecuteAsync();
+            Logger.LogInformation("Result has errors: {hasErrors}, {errors}", result.Errors.Any(), String.Join(", ", result.Errors.Select(error => error.Message)));
+            _summary = new Summary
+                (
+                SiteId: result.Data.Booking.FirstAppointment.SiteId,
+                Time: result.Data.Booking.FirstAppointment.Time,
+                Duration: result.Data.Booking.FirstAppointment.DurationMinute
+                );
         }
     }
 
