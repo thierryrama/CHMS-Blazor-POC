@@ -1,0 +1,21 @@
+query GetFirstAppointment($skipDetails : Boolean = false) {
+    booking {
+        firstAppointment {
+            siteId
+            time
+            durationMinute
+            respondentName @skip(if: $skipDetails)
+            respondentPhoneNumber @skip(if: $skipDetails)
+        }
+    }
+}
+
+query GetSummarizedFirstAppointment {
+    booking {
+        firstAppointment {
+            siteId
+            time
+            durationMinute
+        }
+    }
+}

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using StatCan.Chms.DataTransfer.Booking;
 using StatCan.Chms.QueryResolvers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddGraphQLServer()
-    .AddQueryType(q => q.Name("Query"))
-    .AddType<BookingResolver>();
-//builder.Services.AddS
+    .AddDocumentFromFile("schema.graphql")
+    .BindRuntimeType<Query>();
+    //.BindRuntimeType<Booking>();
+    //.BindRuntimeType<AppointmentDetailData>();
+builder.Services.AddBusinessServices(builder.Configuration);
 
 var app = builder.Build();
 

@@ -1,13 +1,15 @@
 using StatCan.Chms.DataTransfer.Booking;
+using StatCan.Chms.Services;
 
 namespace StatCan.Chms.QueryResolvers;
 /// <summary>
 /// Query Resolvers for Booking functionalities
 /// </summary>
-[ExtendObjectType("Query")]
-public class BookingResolver
+public class Booking
 {
-    public AppointmentDetailData GetFirstAppointment()
+    public static readonly Booking Instance = new();
+    
+    public AppointmentDetailData GetFirstAppointment([Service] BookingBusinessService businessService)
     {
         return new AppointmentDetailData
         (

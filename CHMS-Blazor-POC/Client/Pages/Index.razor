@@ -1,7 +1,7 @@
-﻿@implements IDisposable
-@page "/"
+﻿@page "/"
 @page "/{Id:int}"
 @inject ILogger<Index> Logger
+@inject ChmsGraphQLClient ChmsGraphQlClient
 
 <PageTitle>Index</PageTitle>
 
@@ -9,35 +9,130 @@
 
 Welcome to your new app. Hello hotreload. Where are you? What?
 
-
 <p>
     <a href="/@(Random.Shared.Next())">Home sweet home!</a>
 </p>
+
+<div class="row">
+    <div class="col-md-offset-2 col-md-8">
+        <div>
+            <RadzenCheckBox @bind-Value="@_showDetails" Name="ShowDetails" TValue="bool" Change="OnChange"/>
+            <RadzenLabel Text="Show details" Component="ShowDetails" Style="margin-left: 8px; vertical-align: middle;"/>
+        </div>
+
+        @if (_details != null)
+        {
+            <RadzenCard>
+                <h3 class="h5 mrgn-tp-0">Details</h3>
+                <div>Time</div>
+                <b>@(_details.Time.ToString("MMMM dd, yyyy hh:mm:ss tt"))</b>
+                <div class="row margin-top-medium">
+                    <div class="col-md-6">
+                        <div>Site</div>
+                        <b>@(_details.SiteId)</b>
+                        <div class="margin-top-medium">Respondent</div>
+                        <b>@(@_details.RespondentName)</b>
+                    </div>
+                    <div class="col-md-6">
+                        <div>Duration</div>
+                        <b>@(_details.Duration)</b>
+                        <div class="margin-top-medium">Telephone</div>
+                        <b>@(_details.RespondentPhoneNumber)</b>
+                    </div>
+                </div>
+            </RadzenCard>
+        }
+        else if (_summary != null)
+        {
+            <RadzenCard>
+                <h3 class="h5 mrgn-tp-0">Summary</h3>
+                <div>Time</div>
+                <b>@(_summary.Time.ToString("MMMM dd, yyyy hh:mm:ss tt"))</b>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>Site</div>
+                        <b>@(_summary.SiteId)</b>
+                    </div>
+                    <div class="col-md-6">
+                        <div>Duration</div>
+                        <b>@(_summary.Duration)</b>
+                    </div>
+                </div>
+            </RadzenCard>
+        }
+        else
+        {
+            <p>Loading...</p>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]
     public int? Id { get; set; }
 
-    protected override void OnInitialized()
+    private bool _showDetails;
+    
+    private Details? _details;
+
+    private Summary? _summary;
+
+    protected async override Task OnInitializedAsync()
     {
-        Logger.LogDebug("OnInitialized");
-        base.OnInitialized();
+        await FetchData();
+        
+        await base.OnInitializedAsync();
+
+        await Task.CompletedTask;
+    }
+    
+    private async Task OnChange()
+    {
+        await FetchData();
     }
 
-    protected override void OnParametersSet()
+    private async Task FetchData()
     {
-        Logger.LogDebug("OnParametersSet");
-        base.OnParametersSet();
+        if (_showDetails)
+        {
+            _summary = null;
+            
+            var result = await ChmsGraphQlClient.GetFirstAppointment.ExecuteAsync(true);
+            _details = new Details
+                (
+                SiteId : result.Data.Booking.FirstAppointment.SiteId,
+                Time : result.Data.Booking.FirstAppointment.Time,
+                Duration : result.Data.Booking.FirstAppointment.DurationMinute,
+                RespondentName : result.Data.Booking.FirstAppointment.RespondentName,
+                RespondentPhoneNumber : result.Data.Booking.FirstAppointment.RespondentPhoneNumber
+                );
+        }
+        else
+        {
+            _details = null;
+            
+            // var result = await ChmsGraphQlClient.GetSummarizedFirstAppointment.ExecuteAsync();
+            // Logger.LogInformation("Result has errors: {hasErrors}, {errors}", result.Errors.Any(), String.Join(", ", result.Errors.Select(error => error.Message)));
+            // _summary = new Summary
+            //     (
+            //     SiteId: result.Data.FirstAppointment.SiteId,
+            //     Time: result.Data.FirstAppointment.Time,
+            //     Duration: result.Data.FirstAppointment.DurationMinute
+            //     );
+        }
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Logger.LogDebug("OnAfterRender {firstRender}", firstRender);
-        base.OnAfterRender(firstRender);
-    }
+    record Details (
+        string SiteId,
+        DateTimeOffset Time,
+        int Duration,
+        string RespondentName,
+        string RespondentPhoneNumber
+    );
 
-    public void Dispose()
-    {
-        Logger.LogDebug("Dispose");
-    }
+    record Summary (
+        string SiteId,
+        DateTimeOffset Time,
+        int Duration
+    );
 }

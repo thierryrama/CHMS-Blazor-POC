@@ -1,0 +1,22 @@
+﻿schema {
+  query: Query
+}
+
+type Query {
+  booking: Booking!
+}
+
+type AppointmentDetailData {
+  siteId: String!
+  time: DateTime!
+  durationMinute: Int!
+  respondentName: String!
+  respondentPhoneNumber: String!
+}
+
+type Booking {
+  firstAppointment: AppointmentDetailData!
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime

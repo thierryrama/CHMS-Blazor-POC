@@ -1,12 +1,11 @@
-using StatCan.Chms.Client;
-using StatCan.Chms.Client.Models;
+using System.Globalization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Logging;
+using Radzen;
 using SoloX.BlazorJsonLocalization;
 using SoloX.BlazorJsonLocalization.WebAssembly;
-using System.Globalization;
-using Radzen;
+using StatCan.Chms.Client;
+using StatCan.Chms.Client.Models;
 using StatCan.Chms.Client.Services;
 using StatCan.Chms.Client.ViewModels.Layout;
 
@@ -19,7 +18,7 @@ builder.Logging.AddConfiguration(
 );
 
 builder.Services.AddWebAssemblyJsonLocalization(
-    builder => builder.UseEmbeddedJson()
+    options => options.UseEmbeddedJson()
 );
 
 builder.Services.AddCultureManager(options =>
@@ -29,6 +28,10 @@ builder.Services.AddCultureManager(options =>
 });
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services
+    .AddChmsGraphQLClient()
+    .ConfigureHttpClient(client => client.BaseAddress = new Uri(new Uri(builder.HostEnvironment.BaseAddress), "graphql"));
+
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddSingleton<AppState>();
 builder.Services.AddSingleton<AppStateInitializer>();

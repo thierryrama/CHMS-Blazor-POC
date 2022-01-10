@@ -22,5 +22,12 @@
     <ProjectReference Include="..\Shared\CHMS-Blazor-POC.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="schema.graphql" />
+    <Content Include="schema.graphql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 
 </Project>

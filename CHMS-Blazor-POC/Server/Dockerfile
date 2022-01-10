@@ -21,4 +21,4 @@ RUN dotnet publish "CHMS-Blazor-POC.Server.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "CHMS-Blazor-POC.Server.dll"]
+ENTRYPOINT ["dotnet", "Statcan.Chms.Server.dll"]
