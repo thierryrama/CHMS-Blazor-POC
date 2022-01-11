@@ -1,3 +1,4 @@
+#Get first appointment
 query GetFirstAppointment($skipDetails : Boolean = false) {
     booking {
         firstAppointment {
@@ -10,12 +11,26 @@ query GetFirstAppointment($skipDetails : Boolean = false) {
     }
 }
 
+# Get Summarized first appointment
 query GetSummarizedFirstAppointment {
     booking {
         firstAppointment {
             siteId
             time
             durationMinute
+        }
+    }
+}
+
+# Get appointments for a site between two dates
+query GetAppointmentsAtSiteBetweenDates($site:String!, $start:DateTime!, $end:DateTime!) {
+    booking {
+        appointments(site: $site, start: $start, end: $end) {
+            siteId
+            time
+            durationMinute
+            respondentName
+            respondentPhoneNumber
         }
     }
 }
