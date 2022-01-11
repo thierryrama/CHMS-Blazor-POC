@@ -6,7 +6,7 @@ type Query {
   booking: Booking!
 }
 
-type AppointmentDetailData {
+type AppointmentData {
   siteId: String!
   time: DateTime!
   durationMinute: Int!
@@ -15,7 +15,8 @@ type AppointmentDetailData {
 }
 
 type Booking {
-  firstAppointment: AppointmentDetailData!
+  firstAppointment: AppointmentData!
+  appointments(site: String!, start: DateTime!, end: DateTime!): [AppointmentData!]!
 }
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."

@@ -21,4 +21,6 @@ public class AppState
 
         OnSiteChanged?.Invoke(sender, args);
     }
+
+    public bool IsSiteSelected => CurrentSite != null;
 }
