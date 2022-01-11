@@ -14,13 +14,6 @@
     <Compile Remove="Generated\ChmsGraphQLClient.StrawberryShake.cs" Condition="'$(BuildingByReSharper)' == 'true'" />
   </ItemGroup>
 
-  <!--ItemGroup>
-    <Content Remove="Shared\CultureSelector-en.json" />
-    <Content Remove="Shared\CultureSelector-fr.json" />
-    <Content Include="Components\Layout\MainLayout.razor.css" />
-    <Content Include="Components\Layout\NavMenu.razor.css" />
-  </ItemGroup-->
-
   <ItemGroup>
     <Content Remove="Components\Layout\CultureSelector-en.json" />
     <EmbeddedResource Include="Components\Layout\CultureSelector-en.json" />
