@@ -59,7 +59,7 @@
         }
 
         scheduler.Data = appointments;
-        scheduler.Reload();
+        await scheduler.Reload();
     }
     
     protected override void Dispose(bool disposing)
