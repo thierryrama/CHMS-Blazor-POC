@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.ResponseCompression;
-using StatCan.Chms.DataTransfer.Booking;
+using System.Reflection;
 using StatCan.Chms.QueryResolvers;
+using Path = System.IO.Path;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +8,28 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen
+(
+    options =>
+    {
+        // Add support for Nullable Reference Types but Swashbuckle still differentiate between Non Nullable and Required.
+        //   - Non Nullable means that if the key is present in the document, its value will not be null.
+        //   - Required means that the key must be in the document.
+        // See https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1686
+        options.SupportNonNullableReferenceTypes();
+        
+        // Add support XML comments 
+        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    }
+);
+// Learn more about ChilliCream Hot Chocolate GraphQL server at https://chillicream.com/docs/hotchocolate
 builder.Services.AddGraphQLServer()
     .AddDocumentFromFile("schema.graphql")
     .BindRuntimeType<Query>();
-    //.BindRuntimeType<Booking>();
-    //.BindRuntimeType<AppointmentDetailData>();
+
 builder.Services.AddBusinessServices(builder.Configuration);
 
 var app = builder.Build();
@@ -21,6 +38,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {

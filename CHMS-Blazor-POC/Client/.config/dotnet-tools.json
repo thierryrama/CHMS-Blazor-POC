@@ -7,6 +7,12 @@
       "commands": [
         "dotnet-graphql"
       ]
+    },
+    "microsoft.dotnet-openapi": {
+      "version": "6.0.1",
+      "commands": [
+        "dotnet-openapi"
+      ]
     }
   }
 }
