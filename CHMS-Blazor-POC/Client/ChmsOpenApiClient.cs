@@ -1,4 +1,4 @@
-﻿namespace StatCan.Chms.Client;
+﻿namespace StatCan.Chms.Client.OpenApi;
 
 /// <summary>
 /// This is the client for the CHMS Open API.

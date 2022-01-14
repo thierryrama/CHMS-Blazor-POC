@@ -33,6 +33,13 @@ public class BookingController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<AppointmentDetailData>>> GetAppointments([Required] string site, DateTimeOffset? from, DateTimeOffset? to)
     {
+        // Question: which date time data type is the correct one to use?
+        //   DateTime?
+        //     The Kind can be: Local, UTC, Unspecified
+        //   DateTimeOffset?
+        //     Always with an offset relative to UTC
+        //
+        // The API can be called with all sorts of date time format.
         return await Task.FromResult
         (
             Ok(_bookingBusinessService.GetSiteAppointmentsByDateRange(site, from?.LocalDateTime ?? DateTime.Today, to?.LocalDateTime ?? DateTime.Today.AddDays(1)))

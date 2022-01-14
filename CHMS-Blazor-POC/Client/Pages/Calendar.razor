@@ -58,23 +58,11 @@
         
         if ("httpclient".Equals(ClientApi, StringComparison.OrdinalIgnoreCase))
         {
-            // What is the correct way to format dates?
-            // In this case, "u" is a ISO 8601 format that and the "Z" means that the it's in UTC.
-            // "u"	UniversalSortableDateTimePattern	yyyy'-'MM'-'dd HH':'mm':'ss'Z'
-            // 2008-04-10 13:30:00Z
-            //
-            // "Although the result string should express a time as Coordinated Universal Time (UTC), no conversion of
-            //  the original DateTime value is performed during the formatting operation. Therefore, you must convert
-            //  a DateTime value to UTC by calling the DateTime.ToUniversalTime method before formatting it.
-            //  In contrast, DateTimeOffset values perform this conversion automatically; there is no need to call the
-            //  DateTimeOffset.ToUniversalTime method before the formatting operation."
-            //
-            //  See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#date-and-time-formats
             var request = QueryHelpers.AddQueryString("api/booking-reservation/appointments", new Dictionary<string, string>()
             {
                 {"site", site},
-                {"from", from.ToString("u")},
-                {"to", to.ToString("u")}
+                {"from", from.ToString("o")},
+                {"to", to.ToString("o")}
             });
 
             var results = await HttpClient.GetFromJsonAsync<StatCan.Chms.DataTransfer.Booking.AppointmentDetailData[]>(request);
@@ -91,14 +79,6 @@
         }
         else if ("nswag".Equals(ClientApi, StringComparison.OrdinalIgnoreCase))
         {
-            // What is the correct way to format dates?
-            // The generated ChmsOpenApiClient formats the date with "s" which is a ISO 8601 format that doesn't contains the offset. 
-            // "s"	SortableDateTimePattern	yyyy'-'MM'-'dd'T'HH':'mm':'ss
-            // 2008-04-10T06:30:00
-            //
-            // "For example, the result strings produced by formatting the date and time values 2014-11-15T18:32:17+00:00 and 2014-11-15T18:32:17+08:00 are identical."
-            //
-            // See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#date-and-time-formats 
             var result = await ChmsOpenApiClient.AppointmentsAsync(site, @from, to);
             appointments = result!.Select
                 (
@@ -113,13 +93,6 @@
         }
         else
         {
-            // What is the correct way to format dates?
-            // The formatter used by Strawberry Shake can be found https://github.com/ChilliCream/hotchocolate/blob/main/src/StrawberryShake/Client/src/Core/Serialization/DateTimeSerializer.cs
-            //
-            // If the DateTimeOffset is already in UTC, it uses a ISO 8601 format indicating that it's already in UTC.
-            //   _utcFormat = "yyyy-MM-ddTHH\\:mm\\:ss.fffZ"
-            // Otherwise, it uses a ISO 8601 format that contains the offset
-            //   _localFormat = "yyyy-MM-ddTHH\\:mm\\:ss.fffzzz"
             var result = await ChmsGraphQlClient
                 .GetAppointmentsAtSiteBetweenDates.ExecuteAsync(site, from, to);
 

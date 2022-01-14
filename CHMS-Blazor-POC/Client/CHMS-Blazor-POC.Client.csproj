@@ -69,6 +69,16 @@
     <Folder Include="Generated\" />
   </ItemGroup>
   <ItemGroup>
-    <OpenApiReference Include="./ChmsOpenApi.json" SourceUrl="https://localhost:7123/swagger/v1/swagger.json" />
+    <OpenApiReference Include="./ChmsOpenApi.json"
+                      SourceUrl="https://localhost:7123/swagger/v1/swagger.json"
+                      Namespace="StatCan.Chms.Client.OpenApi">
+      <!-- Note: If the client is out of date and it's not being regenerated at build time, just delete the previsouly generated ./obj/ChmsOpenApi.cs file first -->
+      
+      <!-- The default date time format used by the NSwag code generated is "s"; which drops the offset -->
+      <!-- We're changing it to "o" to preserve the offset -->
+      <!-- See https://github.com/RicoSuter/NSwag/issues/1007 -->
+      <!-- See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#date-and-time-formats -->
+      <Options>/UseBaseUrl:false /ParameterDateTimeFormat:o</Options>
+    </OpenApiReference>
   </ItemGroup>
 </Project>
