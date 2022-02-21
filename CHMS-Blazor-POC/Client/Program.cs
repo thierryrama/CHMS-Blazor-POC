@@ -9,6 +9,8 @@ using StatCan.Chms.Client.Models;
 using StatCan.Chms.Client.OpenApi;
 using StatCan.Chms.Client.Services;
 using StatCan.Chms.Client.ViewModels.Layout;
+using Fluxor;
+using StatCan.Chms.Client.Store.CultureSelection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -42,9 +44,19 @@ builder.Services.AddTransient<SignedInUserViewModel>();
 builder.Services.AddTransient<SiteSelectorViewModel>();
 builder.Services.AddTransient<CurrentSiteViewModel>();
 
+// Add the following
+var currentAssembly = typeof(Program).Assembly;
+builder.Services.AddFluxor(options => options
+    .ScanAssemblies(currentAssembly)
+    .UseRouting()
+    .UseReduxDevTools()
+    .UseCultureSelection()
+);
+
 var host = builder.Build();
 
-var appStateInitializer = host.Services.GetService<AppStateInitializer>();
+var appStateInitializer = host.Services.GetRequiredService<AppStateInitializer>();
 await appStateInitializer.InitializeStateAsync();
+
 
 await host.RunAsync();

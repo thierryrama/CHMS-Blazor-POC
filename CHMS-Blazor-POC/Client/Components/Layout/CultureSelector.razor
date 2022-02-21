@@ -22,12 +22,13 @@
 </ul>
 
 @code {
-	// This component is used to select the culture. However, it's not its responsibility to perform the actual culture change.
+	// This component is used to select the culture. However, it's not directly dispatching a Flux action to request
+	// the culture change.
 	//
-	// When a culture is selected, this component will set the "culture" query parameter on the current page. Another component has
-	// to detect the query pameter and perform the actual culture change.
+	// Instead, this component will set the "culture" query parameter on the current page. An effect in the
+	// Culture Selection feature will detect the "culture" query parameter. 
 	//
-	// Currently, the actual culture change is performed by hooking to the Router.OnNavigateAsync event. See App.razor.
+	// We implemented it this way because we also have to support setting the culture through the query parameter.
 
 	[Inject]
 	private NavigationManager NavigationManager { get; set; }

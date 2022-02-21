@@ -46,18 +46,23 @@
     <EmbeddedResource Include="App-fr.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="5.0.0" />
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5" />
-    <PackageReference Include="Radzen.Blazor" Version="3.13.12" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.15.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Radzen.Blazor" Version="3.15.5" />
     <PackageReference Include="SoloX.BlazorJsonLocalization.WebAssembly" Version="1.0.2" />
-    <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.4.1" />
-    <PackageReference Include="StrawberryShake.Transport.Http" Version="12.4.1" />
+    <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.6.0" />
+    <PackageReference Include="StrawberryShake.Transport.Http" Version="12.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\CHMS-Blazor-POC.Shared.csproj" />
@@ -69,9 +74,7 @@
     <Folder Include="Generated\" />
   </ItemGroup>
   <ItemGroup>
-    <OpenApiReference Include="./ChmsOpenApi.json"
-                      SourceUrl="https://localhost:7123/swagger/v1/swagger.json"
-                      Namespace="StatCan.Chms.Client.OpenApi">
+    <OpenApiReference Include="./ChmsOpenApi.json" SourceUrl="https://localhost:7123/swagger/v1/swagger.json" Namespace="StatCan.Chms.Client.OpenApi">
       <!-- Note: If the client is out of date and it's not being regenerated at build time, just delete the previsouly generated ./obj/ChmsOpenApi.cs file first -->
       
       <!-- The default date time format used by the NSwag code generated is "s"; which drops the offset -->

@@ -1,47 +1,18 @@
-﻿using Microsoft.AspNetCore.Components;
-using StatCan.Chms.Client.Services;
+﻿using Fluxor;
+using Fluxor.Blazor.Web.Components;
+using Microsoft.AspNetCore.Components;
+using StatCan.Chms.Client.Store.CultureSelection;
 
 namespace StatCan.Chms.Client.Components.Layout;
 
 /// <summary>
-/// A layout that is aware when the cutlture was changed by the <see cref="Services.CultureManager"/>. By default, it re-renders the component on a culture
-/// change.
+/// A layout that re-renders on culture change.
 /// </summary>
-/// <remarks>
-/// With the way that the <see cref="CultureSelector"/> works by using a query parameter, this class is actually unnecessary. That is because the layout is automatically
-/// re-rendered when the URI changes.
-/// </remarks>
-public class CultureChangeAwareLayout : LayoutComponentBase, IDisposable
+public class CultureChangeAwareLayout : FluxorLayout
 {
     [Inject]
-    private CultureManager? CultureManager { get; set; }
-
-    protected override void OnInitialized()
-    {
-        if (CultureManager != null)
-        {
-            CultureManager.CultureChanged += OnCultureChanged;
-        }
-
-        base.OnInitialized();
-    }
-
-    public void Dispose()
-    {
-        if (CultureManager != null)
-        {
-            // To avoid memory leak, unregister the listener when the component is disposed.
-            CultureManager.CultureChanged -= OnCultureChanged;
-        }
-    }
-
-    /// <summary>
-    /// Method invoked when the culture was changed by the <see cref="Services.CultureManager"/>. By default, it re-renders the component.
-    /// </summary>
-    /// <param name="sender">The originator of the cultur change</param>
-    /// <param name="args">Details of the culture change</param>
-    protected virtual void OnCultureChanged(object? sender, CultureChangedArgs args)
-    {
-        StateHasChanged();
-    }
+    // Don't remove this.
+    // This is how Fluxor knows which state to track for this component. It does so by inspecting the states that
+    // are injected ([Inject]) into the component.
+    protected IState<CultureSelectionState> CultureSelectionState { get; set; } = null!;
 }

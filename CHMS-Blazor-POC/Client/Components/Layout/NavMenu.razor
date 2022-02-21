@@ -1,4 +1,7 @@
-﻿@inherits CultureChangeAwareComponent
+﻿@using System.Runtime.InteropServices
+@using Fluxor
+@using StatCan.Chms.Client.Store.CultureSelection
+@using System.Globalization
 @implements IAsyncDisposable
 @inject IStringLocalizer<NavMenu> Loc
 
@@ -38,7 +41,15 @@
 	private bool _reinitializeWetMenuPlugin;
 
 	[Inject]
-	private IJSRuntime JSRuntime { get; set; }
+	private IJSRuntime JSRuntime { get; set; } = null!;
+
+	[Inject] private IState<CultureSelectionState> CultureSelectionState { get; set; } = null!;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		CultureSelectionState.StateChanged += OnCultureSelectionState;
+	}
 
 	// 1. WET is loaded with the document and is loaded before the application is loaded by Blazor. It can't automatically load the navigation menu because
 	// it doesn't exist until Blazor loaded the application and renderes this component.
@@ -67,21 +78,30 @@
 			await _jsModule!.InvokeVoidAsync("initializeWETMenuPlugin");
 		}
 	}
-
-	protected override void OnCultureChanged(object sender, CultureChangedArgs args)
+	
+	private void OnCultureSelectionState(object? sender, EventArgs e)
 	{
-		_removed = true;
-		// Weird bug between the normal navigation menu and the small window collapsed navigation menu (the mobile panel):
-		//   The language link doesn't get updated in the collapsed navigation menu.
-		// Some WET Javascript copies the content of the "#wb-lng" section into the "#mb-pnl" div. But because of some race condition between Blazor and the DOM updates, the Javascript
-		// doesn't get the updated link.
-		//
-		// Here we introduce a deliberate delay in the refresh of the normal navigation menu to allow the <CultureSelector> to fully refresh first.
-		Task.Run(async () => await InvokeAsync(() => base.OnCultureChanged(sender, args)));
+		if (_jsModule == null)
+		{
+			InvokeAsync(StateHasChanged);
+		}
+		else
+		{
+			_removed = true;
+			// Weird bug between the normal navigation menu and the small window collapsed navigation menu (the mobile panel):
+			//   The language link doesn't get updated in the collapsed navigation menu.
+			// Some WET Javascript copies the content of the "#wb-lng" section into the "#mb-pnl" div. But because of some race condition between Blazor and the DOM updates, the Javascript
+			// doesn't get the updated link.
+			//
+			// Here we introduce a deliberate delay in the refresh of the normal navigation menu to allow the <CultureSelector> to fully refresh first.
+			Task.Run(async () => await InvokeAsync(StateHasChanged));
+		}
 	}
 
 	async ValueTask IAsyncDisposable.DisposeAsync()
 	{
+		CultureSelectionState.StateChanged -= OnCultureSelectionState;
+		
 		if (_jsModule != null)
 		{
 			await _jsModule.DisposeAsync();
