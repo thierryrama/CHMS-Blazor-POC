@@ -2,95 +2,61 @@
 
 @inject IStringLocalizer<MainLayout> Loc
 @inject IJSRuntime JS
+@inject CultureManager CultureManager
 
-<RadzenDialog />
+<Radzen.Blazor.RadzenDialog />
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
-<header id="navbar" class="">
-	<div id="wb-bnr" class="container">
-		<section id="wb-lng" class="visible-md visible-lg text-right">
-			<CultureSelector CurrentCulture="CultureSelectionState.Value.CurrentCulture" SupportedCultures="CultureSelectionState.Value.SupportedCultures"/>
-		</section>
-		<div class="row">
-			<div class="brand col-xs-8 col-sm-9 col-md-6">
-				<a href="/">
-					<img id="header-logo" src='./sig-blk-en.svg' alt="Statistics Canada" />
-				</a>
-			</div>
-			<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn">
-				<h2>Search and menus</h2>
-				<ul class="list-inline text-right chvrn">
-					<li>
-						<a href="#mb-pnl" title="Search and menus" aria-controls="mb-pnl" class="overlay-lnk" role="button">
-							<span class="glyphicon">
-								<span class="glyphicon glyphicon-th-list">
-									<span class="wb-inv">Search and menus</span>
-								</span>
-							</span>
-						</a>
-					</li>
-				</ul>
-				<div id="mb-pnl"></div>
-			</section>
-			<section id="wb-so">
-				<h2 class="wb-inv">Application</h2>
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-12 col-md-6">
-							<span class="h2"><RadzenIcon Icon="local_hospital"/>@Loc["AppName"]</span>
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
-	<NavMenu />
-</header>
-<!-- Static header ends -->
-<main property="mainContentOfPage" class="container" resource="#wb-main" typeof="WebPageElement">
-	<RadzenCard class="row profile-bar">
-		<div class="col-xs-5">
-			<CurrentSite/>
-		</div>
-		<div class="col-xs-7 text-right">
-			<SignedInUser/>
-		</div>
-	</RadzenCard>
-	@Body
-</main>
-<!-- Static footer starts -->
-<footer id="wb-info">
-	<div class="landscape">
-		<nav class="container wb-navcurr">
-			<h2 class="wb-inv">About government</h2>
-			<ul class="list-unstyled colcount-sm-2 colcount-md-3">
-				<li><a href="https://www.canada.ca/en/contact.html">Contact us</a></li>
-				<li><a href="https://www.canada.ca/en/government/dept.html">Departments and agencies</a></li>
-				<li><a href="https://www.canada.ca/en/government/publicservice.html">Public service and military</a></li>
-				<li><a href="https://www.canada.ca/en/news.html">News</a></li>
-				<li><a href="https://www.canada.ca/en/government/system/laws.html">Treaties, laws and regulations</a></li>
-				<li><a href="https://www.canada.ca/en/transparency/reporting.html">Government-wide reporting</a></li>
-				<li><a href="https://pm.gc.ca/eng">Prime Minister</a></li>
-				<li><a href="https://www.canada.ca/en/government/system.html">How government works</a></li>
-				<li><a href="https://open.canada.ca/en/">Open government</a></li>
-			</ul>
-		</nav>
-	</div>
-	<div class="brand">
-		<div class="container">
-			<div class="row">
-				<nav class="col-md-9 col-lg-10 ftr-urlt-lnk">
-					<h2 class="wb-inv">About this site</h2>
-					<ul>
-						<li><a href="https://www.canada.ca/en/social.html">Social media</a></li>
-						<li><a href="https://www.canada.ca/en/mobile.html">Mobile applications</a></li>
-						<li><a href="https://www1.canada.ca/en/newsite.html">About Canada.ca</a></li>
-						<li><a href="https://www.canada.ca/en/transparency/terms.html">Terms and conditions</a></li>
-						<li><a href="https://www.canada.ca/en/transparency/privacy.html">Privacy</a></li>
-					</ul>
-				</nav>
-				<div class="col-xs-6 visible-sm visible-xs tofpg"> <a href="#wb-cont">Top of Page <span class="glyphicon glyphicon-chevron-up"></span></a> </div>
-				<div class="col-xs-6 col-md-3 col-lg-2 text-right"> <img src="./theme-gc-web/assets/wmms-blk.svg" alt="Symbol of the Government of Canada"> </div>
-			</div>
-		</div>
-	</div>
-</footer>
+<MudLayout>
+    <MudAppBar Elevation="0">
+	    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+	    <SiteSelector/>
+	    <CurrentSite/>
+        <MudSpacer />
+        <SignedInUser/>
+    </MudAppBar>
+	<MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+		<MudDrawerHeader LinkToIndex="true" Class="flex-column">
+			<MudImage Src="./sig-blk-en.svg" Class="flex-shrink-1"/>
+			<MudText Typo="Typo.h6">
+				@Loc["AppName"]
+			</MudText>
+		</MudDrawerHeader>
+		<MudText Class="pe-6" Align="Align.Right">
+			<CultureSelector CurrentCulture="@CultureManager.CurrentCulture" SupportedCultures="@CultureManager.SupportedCultures"/>
+		</MudText>
+		<MudDivider Class="my-2"/>
+		<NavMenu/>
+	</MudDrawer>
+	<MudMainContent>
+		<MudContainer MaxWidth="MaxWidth.Large">
+			@Body
+		</MudContainer>
+		<footer>
+			<MudPaper Square="true" Elevation="0" Class="mt-4" Style="@($"height: {_theme.LayoutProperties.AppbarHeight}; background: #26374a url('./theme-gc-web/assets/landscape.png') no-repeat right bottom;")"/>
+			<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+				<MudGrid>
+					<MudItem xs="6" Class="d-md-none d-lg-none">To the top</MudItem>
+					<MudItem xs="6" md="12">
+						<MudText Align="Align.Right">
+							<MudImage Height="40" Src="./theme-gc-web/assets/wmms-blk.svg" Alt="Symbol of the Government of Canada"/>
+						</MudText>
+					</MudItem>
+				</MudGrid>
+			</MudContainer>
+		</footer>
+	</MudMainContent>
+</MudLayout>
+
+@code {
+	private readonly MudTheme _theme = new();
+	
+	private bool _drawerOpen = true;
+
+	void DrawerToggle()
+	{
+		_drawerOpen = !_drawerOpen;
+	}
+}

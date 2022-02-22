@@ -2,109 +2,20 @@
 @using Fluxor
 @using StatCan.Chms.Client.Store.CultureSelection
 @using System.Globalization
-@implements IAsyncDisposable
+@inherits CultureChangeAwareComponent
 @inject IStringLocalizer<NavMenu> Loc
 
-@if (!_removed)
-{
-<nav role="navigation" id="wb-sm" class="wb-menu visible-md visible-lg" data-trgt="mb-pnl" typeof="SiteNavigationElement">
-	<div class="pnl-strt container nvbar">
-		<h2 class="wb-inv">@Loc["Heading"]</h2>
-		<div class="row">
-			<ul class="list-inline menu" role="menubar">
-				<li><a class="item" href="/splash-entree.html">@Loc["Search"]</a></li>
-				<li><a class="item" href="">@Loc["Cases"]</a></li>
-				<li>
-					<a class="item" href="#booking">@Loc["Booking"]</a>
-					<ul class="sm list-unstyled" id="booking" role="menu">
-						<li><a href="calendar-calendrier">@Loc["Calendar"]</a></li>
-						<li><a href="">@Loc["DefaultDayTemplate"]</a></li>
-						<li><a href="">@Loc["DefaultSiteTemplate"]</a></li>
-						<li><a href="">@Loc["CreateSite"]</a></li>
-					</ul>
-				</li>
-				<li><a class="item" href="">@Loc["Collection"]</a></li>
-				<li><a class="item" href="">@Loc["Users"]</a></li>
-				<li><a class="item" href="">@Loc["Reports"]</a></li>
-				<li><a class="item" href="">@Loc["Sites"]</a></li>
-			</ul>
-		</div>
-	</div>
-</nav>
-}
-
-@code {
-	private IJSObjectReference? _jsModule;
-
-	private bool _removed;
-
-	private bool _reinitializeWetMenuPlugin;
-
-	[Inject]
-	private IJSRuntime JSRuntime { get; set; } = null!;
-
-	[Inject] private IState<CultureSelectionState> CultureSelectionState { get; set; } = null!;
-
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
-		CultureSelectionState.StateChanged += OnCultureSelectionState;
-	}
-
-	// 1. WET is loaded with the document and is loaded before the application is loaded by Blazor. It can't automatically load the navigation menu because
-	// it doesn't exist until Blazor loaded the application and renderes this component.
-	//
-	// As such, we have to manually initialize the menu plugin.
-	//
-	// 2. Furthermore, once it's initialized by WET --which is outside Blazor, Blazor loses track of the element.
-	//
-	// As such, on language change, we have to remove, re-insert, and re-initalize the nagivation menu. Otherwise, it doesn't refresh.
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
-		{
-			_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/NavMenu.js");
-			await _jsModule.InvokeVoidAsync("initializeWETMenuPlugin");
-		}
-		else if (_removed)
-		{
-			_removed = false;
-			_reinitializeWetMenuPlugin = true;
-
-			await InvokeAsync(() => StateHasChanged());
-		} else if (_reinitializeWetMenuPlugin)
-		{
-			_reinitializeWetMenuPlugin = false;
-			await _jsModule!.InvokeVoidAsync("initializeWETMenuPlugin");
-		}
-	}
-	
-	private void OnCultureSelectionState(object? sender, EventArgs e)
-	{
-		if (_jsModule == null)
-		{
-			InvokeAsync(StateHasChanged);
-		}
-		else
-		{
-			_removed = true;
-			// Weird bug between the normal navigation menu and the small window collapsed navigation menu (the mobile panel):
-			//   The language link doesn't get updated in the collapsed navigation menu.
-			// Some WET Javascript copies the content of the "#wb-lng" section into the "#mb-pnl" div. But because of some race condition between Blazor and the DOM updates, the Javascript
-			// doesn't get the updated link.
-			//
-			// Here we introduce a deliberate delay in the refresh of the normal navigation menu to allow the <CultureSelector> to fully refresh first.
-			Task.Run(async () => await InvokeAsync(StateHasChanged));
-		}
-	}
-
-	async ValueTask IAsyncDisposable.DisposeAsync()
-	{
-		CultureSelectionState.StateChanged -= OnCultureSelectionState;
-		
-		if (_jsModule != null)
-		{
-			await _jsModule.DisposeAsync();
-		}
-	}
-}
+<MudNavMenu>
+	<MudNavLink Href="/search" Icon="@Icons.Filled.Search">@Loc["Search"]</MudNavLink>
+	<MudNavLink Href="/cases">@Loc["Cases"]</MudNavLink>
+	<MudNavGroup Title="@Loc["Booking"]">
+		<MudNavLink Href="/calendar-calendrier">@Loc["Calendar"]</MudNavLink>
+		<MudNavLink Href="/defaultDayTemplate">@Loc["DefaultDayTemplate"]</MudNavLink>
+		<MudNavLink Href="/defaultSiteTemplate">@Loc["DefaultSiteTemplate"]</MudNavLink>
+		<MudNavLink Href="/createSite">@Loc["CreateSite"]</MudNavLink>
+	</MudNavGroup>
+	<MudNavLink Href="/collection">@Loc["Collection"]</MudNavLink>
+	<MudNavLink Href="/users">@Loc["Users"]</MudNavLink>
+	<MudNavLink Href="reports">@Loc["Reports"]</MudNavLink>
+	<MudNavLink Href="sites">@Loc["Sites"]</MudNavLink>
+</MudNavMenu>

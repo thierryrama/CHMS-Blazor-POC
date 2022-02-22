@@ -1,65 +1,41 @@
 ﻿@inherits CultureChangeAwareComponent
-@inject DialogService DialogService
 @inject SiteSelectorViewModel ViewModel
 
-<RadzenTemplateForm TItem="SiteSelectorViewModel.SiteSelectorForm" Data="@ViewModel.Form" Submit="OnSubmitAsync">
-    <div class="row">
-        <div class="col-md-2">
-            <RadzenLabel Text="Cycle" Component="Cycle"/>
-        </div>
-        <div class="col-md-10">
-            <RadzenDropDown Name="Cycle" TValue="int?"
-                            Data="@ViewModel.Cycles" @bind-Value="@ViewModel.Form.Cycle"
-                            TextProperty="Name" ValueProperty="Id"
-                            Change="OnCycleChangeAsync"
-                            Placeholder="Select..."
-                            AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"/>
-            <RadzenRequiredValidator Component="Cycle" Text="Cycle is required"/>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-2">
-            <RadzenLabel Text="Site" Component="Site"/>
-        </div>
-        <div class="col-md-10">
-            <RadzenDropDown Name="Site" TValue="int?"
-                            Data="@ViewModel.Sites" @bind-Value="@ViewModel.Form.Site"
-                            TextProperty="Name" ValueProperty="Id"
-                            Placeholder="Select..."
-                            AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"/>
-            <RadzenRequiredValidator Component="Site" Text="Site is required"/>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Click="OnCancelAsync"/>
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Select"/>
-        </div>
-    </div>
-</RadzenTemplateForm>
+<MudPaper id="site-selector" Elevation="0" Square="true" Outlined="false" Class="mud-theme-primary">
+    <MudSelect T="SiteSelectorViewModel.SelectableSite"
+               ToStringFunc="selectableSite => selectableSite.Site.Name"
+               AnchorOrigin="Origin.BottomCenter"
+               Label="Current site" Placeholder="Select a site"
+               Value="@ViewModel.SelectedSite" ValueChanged="async (newValue) => await OnValueChangeAsync(newValue)"
+               AdornmentColor="Color.Inherit">
+        @foreach (var (cycle, selectableSites) in ViewModel.SelectableSitesByCycle)
+        {
+            // This should be a <MudText> but there's a new bug (found 10 hours ago!) in MudBlazor that shows
+            // the text outside the <MudSelect> :(
+            //   See discussion:
+            //     MudSelect group #1819
+            //     https://github.com/MudBlazor/MudBlazor/discussions/1819
+            <MudSelectItem Disabled="true" T="SiteSelectorViewModel.SelectableSite" Value="@null">
+                <MudText Typo="Typo.h6" Class="">@cycle.Name</MudText>
+            </MudSelectItem>
+            @foreach (var selectableSite in selectableSites)
+            {
+                <MudSelectItem Value="@selectableSite"/>
+            }
+        }
+    </MudSelect>
+</MudPaper>
 
 @code {
+    private readonly MudTheme _theme = new();
+
     protected override async Task OnInitializedAsync()
     {
         await ViewModel.InitializeAsync();
     }
-    
-    private async Task OnCycleChangeAsync()
+
+    private async Task OnValueChangeAsync(SiteSelectorViewModel.SelectableSite? selectableSite)
     {
-        await ViewModel.FetchSitesAsync();
-    }
-    
-    private Task OnCancelAsync()
-    {
-        DialogService.Close();
-        return Task.CompletedTask;
-    }
-    
-    private async Task OnSubmitAsync()
-    {
-        await ViewModel.SaveAsync();
-        DialogService.Close();
+        await ViewModel.SaveAsync(selectableSite);
     }
 }

@@ -2,9 +2,12 @@
 
 @using StatCan.Chms.Client.Components.Booking
 @using Microsoft.AspNetCore.WebUtilities
+@using Radzen
+@using Radzen.Blazor
+
 @inherits CultureChangeAwareComponent
 
-@inject DialogService DialogService
+@inject Radzen.DialogService DialogService
 @inject IStringLocalizer<Calendar> Loc
 @inject AppState _appState;
 @inject HttpClient HttpClient;
@@ -35,10 +38,12 @@
     {
         _appState.OnSiteChanged += AppStateOnOnSiteChanged;
 
-        if (_appState.IsSiteSelected)
-        {
-            await UpdateFromAppointments(_appState.CurrentSite!.Name);
-        }
+        // if (_appState.IsSiteSelected)
+        // {
+        //     await UpdateFromAppointments(_appState.CurrentSite!.Name);
+        // }
+        
+        await UpdateFromAppointments("Ottawa");
         
         await base.OnInitializedAsync();
     }

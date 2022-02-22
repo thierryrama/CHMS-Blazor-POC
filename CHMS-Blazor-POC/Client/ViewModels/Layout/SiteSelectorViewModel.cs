@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Immutable;
 using StatCan.Chms.Client.Models;
 using StatCan.Chms.Client.Services;
 
@@ -14,67 +14,49 @@ public class SiteSelectorViewModel
         _cycleService = cycleService;
         _appState = appState;
 
-        Form = new SiteSelectorForm
+        if (appState.IsSiteSelected)
         {
-            Cycle = _appState.CurrentCycle?.Id,
-            Site = _appState.CurrentSite?.Id
-        };
+            SelectedSite = new SelectableSite(appState.CurrentCycle!, appState.CurrentSite!);
+        }
     }
 
-    public IEnumerable<Cycle> Cycles { get; private set; }
-    
-    public IEnumerable<Site> Sites { get; private set; }
-    
-    public SiteSelectorForm Form { get; }
-    
+    public IDictionary<Cycle, IEnumerable<SelectableSite>> SelectableSitesByCycle { get; private set; } =
+        ImmutableDictionary<Cycle, IEnumerable<SelectableSite>>.Empty;
+
+    public SelectableSite? SelectedSite { get; set; }
+
     public async Task InitializeAsync()
     {
-        Cycles = await _cycleService.GetCycles();
-        
-        if (Form.Cycle != null)
+        var cycles = await _cycleService.GetCycles();
+        var getSitesTaskByCycle = new Dictionary<Cycle, Task<IEnumerable<Site>>>();
+        foreach (var cycle in cycles)
         {
-            await FetchSitesAsync(false);
-        }
-    }
-
-    public async Task FetchSitesAsync()
-    {
-        await FetchSitesAsync(true);
-    }
-    
-    private async Task FetchSitesAsync(bool resetSelectedSite)
-    {
-        if (resetSelectedSite)
-        {
-            Form.Site = null;
+            getSitesTaskByCycle[cycle] = _cycleService.GetSitesForCycle(cycle.Id);
         }
 
-        if (Form.Cycle == null)
+        await Task.WhenAll(getSitesTaskByCycle.Values);
+
+        var selectableSitesByCycle = new Dictionary<Cycle, IEnumerable<SelectableSite>>();
+        foreach (var cycle in cycles)
         {
-            Sites = Enumerable.Empty<Site>();
-            await Task.CompletedTask;
+            selectableSitesByCycle[cycle] = getSitesTaskByCycle[cycle].Result
+                .Select(site => new SelectableSite(cycle, site))
+                .ToList();
         }
-        else
-        {
-            Sites = await _cycleService.GetSiteForCycle(Form.Cycle ?? default);            
-        }
+
+        SelectableSitesByCycle = selectableSitesByCycle;
     }
 
-    public async Task SaveAsync()
+    public async Task SaveAsync(SelectableSite? selectedSite)
     {
-        await Task.Run(() =>
+        if (selectedSite == null || SelectableSitesByCycle.Values.Any(sites => sites.Contains(selectedSite)))
         {
-            var cycle = Cycles.FirstOrDefault(cycle => cycle.Id == Form.Cycle);
-            var site = Sites.FirstOrDefault(site => site.Id == Form.Site);
-            
-            _appState.ChangeSite(this, cycle, site);
-        });
+            SelectedSite = selectedSite;
+            _appState.ChangeSite(this, SelectedSite?.Cycle, SelectedSite?.Site);
+        }
+
+        await Task.CompletedTask;
     }
 
-    public class SiteSelectorForm
-    {
-        public int? Cycle { get; set; }
-        
-        public int? Site { get; set; }
-    }
+    public record SelectableSite(Cycle Cycle, Site Site);
 }

@@ -12,18 +12,10 @@ public class CurrentSiteViewModel : IDisposable
         _appState.OnSiteChanged += SiteChanged;
     }
 
-    public event EventHandler<SiteChangedEventArgs> OnSiteChanged; 
+    public event EventHandler<SiteChangedEventArgs> OnSiteChanged;
 
-    public string? CycleName
-    {
-        get => _appState?.CurrentCycle?.Name;
-    }
-
-    public string? SiteName
-    {
-        get => _appState?.CurrentSite?.Name;
-    }
-
+    public TimeZoneInfo? TimeZone => _appState.CurrentSite?.TimeZoneInfo;
+    
     public DateTime? Time
     {
         get => IsCurrentSiteAvailable() ? TimeZoneInfo.ConvertTime(DateTime.Now, _appState.CurrentSite!.TimeZoneInfo!) : null;
@@ -31,7 +23,7 @@ public class CurrentSiteViewModel : IDisposable
 
     public bool IsCurrentSiteAvailable()
     {
-        return CycleName != null && SiteName != null;
+        return _appState.CurrentCycle != null && _appState.CurrentSite != null;
     }
     
     private void SiteChanged(object? sender, SiteChangedEventArgs e)

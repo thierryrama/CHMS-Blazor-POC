@@ -1,28 +1,23 @@
-﻿@inherits CultureChangeAwareComponent
-@implements IDisposable
+﻿@using System.Timers
+@inherits CultureChangeAwareComponent
 @inject CurrentSiteViewModel ViewModel
 @inject IStringLocalizer<CurrentSite> Loc
-@inject DialogService DialogService
 
-<div>
 @if (ViewModel.IsCurrentSiteAvailable())
 {
-    <button class="btn-link" style="padding-left: 0px" @onclick="ShowSiteSelector">@ViewModel.CycleName / @ViewModel.SiteName</button>
-    <br/>
-    @FormattedTime
+    <MudText Class="pl-3" Color="Color.Inherit">
+        @ViewModel.TimeZone!.DisplayName
+        <br/>
+        @FormattedTime
+    </MudText>
 }
-else
-{
-    <button class="btn-link" style="padding-left: 0px" @onclick="ShowSiteSelector">Select a site...</button>
-}
-</div>
 
 @code {
-    private System.Timers.Timer? _timer;
+    private Timer? _timer;
     
     protected override void OnInitialized()
     {
-        _timer = new System.Timers.Timer(30000);
+        _timer = new Timer(30000);
         _timer.Elapsed += RefreshTime!;
         _timer.Enabled = true;
         
@@ -36,20 +31,12 @@ else
         StateHasChanged();
     }
 
-    private void RefreshTime(Object sender, System.Timers.ElapsedEventArgs e)
+    private void RefreshTime(object? sender, ElapsedEventArgs e)
     {
         InvokeAsync(StateHasChanged);
     }
-    
-    private string? FormattedTime
-    {
-        get => ViewModel.Time?.ToString(Loc["TimeFormat"]);
-    }
 
-    private void ShowSiteSelector()
-    {
-        DialogService.Open<SiteSelector>("Select a site");
-    }
+    private string? FormattedTime => ViewModel.Time?.ToString(Loc["TimeFormat"]);
 
     protected override void Dispose(bool disposing)
     {
@@ -57,7 +44,7 @@ else
         {
             if (_timer != null)
             {
-                _timer.Elapsed -= RefreshTime;
+                _timer.Elapsed -= RefreshTime!;
                 _timer.Enabled = false;
             }
 

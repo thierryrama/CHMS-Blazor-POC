@@ -1,14 +1,25 @@
 ﻿@inherits CultureChangeAwareComponent
-@using StatCan.Chms.Client.ViewModels.Layout
-@inject SignedInUserViewModel ViewModel
 @inject IStringLocalizer<SignedInUser> Loc
 
-<RadzenProfileMenu>
-	<Template>
-		@ViewModel.FirstName @ViewModel.LastName<RadzenIcon Icon="account_circle" class="visible-sm-inline visible-md-inline visible-lg-inline"/>
-	</Template>
-	<ChildContent>
-		<RadzenProfileMenuItem Text="@Loc["AccountSettings"]" Path="buttons" Icon="manage_accounts"></RadzenProfileMenuItem>
-		<RadzenProfileMenuItem Text="@Loc["LogOff"]" Path="menu" Icon="logout"></RadzenProfileMenuItem>
-	</ChildContent>
-</RadzenProfileMenu>
+@* Set color to inherit so that it matches the theme of the container for the background and the text color. *@
+@* Which is important for having the right text color for the background used for the theme. *@
+<MudMenu Label="@DisplayName" Color="Color.Inherit"
+         AnchorOrigin="Origin.BottomRight"
+         StartIcon="@Icons.Filled.Person" EndIcon="@Icons.Filled.KeyboardArrowDown">
+	<MudMenuItem Link="/accountSettings">
+		<MudIcon Class="mud-float-left mr-2" Icon="@Icons.Material.Filled.AccountCircle"/>
+		<MudText Inline="true">@Loc["AccountSettings"]</MudText>
+	</MudMenuItem>
+	<MudMenuItem Link="/logOff">
+		<MudIcon Class="mud-float-left mr-2" Icon="@Icons.Material.Filled.Logout"/>
+        <MudText Inline="true">@Loc["LogOff"]</MudText>
+	</MudMenuItem>
+</MudMenu>
+
+@code {
+
+	[Inject]
+	private SignedInUserViewModel ViewModel { get; set; } = null!;
+
+	private string DisplayName => $"{ViewModel.FirstName} {ViewModel.LastName}";
+}

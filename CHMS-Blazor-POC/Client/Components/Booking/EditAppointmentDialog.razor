@@ -1,4 +1,8 @@
-@inject DialogService DialogService
+@using Radzen
+@using Radzen.Blazor
+@using ButtonType = Radzen.ButtonType
+
+@inject Radzen.DialogService DialogService
 
 <RadzenTemplateForm TItem="Appointment" Data="@model" Submit=@OnSubmit>
     <div class="row" style="margin-bottom: 16px">

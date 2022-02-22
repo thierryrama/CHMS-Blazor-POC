@@ -1,6 +1,8 @@
 using System.Globalization;
+using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using Radzen;
 using SoloX.BlazorJsonLocalization;
 using SoloX.BlazorJsonLocalization.WebAssembly;
@@ -8,9 +10,8 @@ using StatCan.Chms.Client;
 using StatCan.Chms.Client.Models;
 using StatCan.Chms.Client.OpenApi;
 using StatCan.Chms.Client.Services;
-using StatCan.Chms.Client.ViewModels.Layout;
-using Fluxor;
 using StatCan.Chms.Client.Store.CultureSelection;
+using StatCan.Chms.Client.ViewModels.Layout;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -36,7 +37,12 @@ builder.Services
     .ConfigureHttpClient(client => client.BaseAddress = new Uri(new Uri(builder.HostEnvironment.BaseAddress), "graphql"));
 builder.Services.AddHttpClient<ChmsOpenApiClient>(client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
+//Radzen
 builder.Services.AddScoped<DialogService>();
+
+//MudBlazor
+builder.Services.AddMudServices();
+
 builder.Services.AddSingleton<AppState>();
 builder.Services.AddSingleton<AppStateInitializer>();
 builder.Services.AddSingleton<CycleService>();

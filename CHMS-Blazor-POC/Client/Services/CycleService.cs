@@ -87,7 +87,7 @@ public class CycleService
         return await Task.FromResult(_cycles);
     }
 
-    public async Task<IEnumerable<Site>> GetSiteForCycle(int cycleId)
+    public async Task<IEnumerable<Site>> GetSitesForCycle(int cycleId)
     {
         var result = _sitesByCycleId.ContainsKey(cycleId) ? _sitesByCycleId[cycleId] : Enumerable.Empty<Site>();
         return await Task.FromResult(result);

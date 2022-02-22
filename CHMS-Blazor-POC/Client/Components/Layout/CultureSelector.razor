@@ -2,24 +2,16 @@
 @using System.Globalization
 @inject IStringLocalizer<CultureSelector> Loc
 
-<h2 class="wb-inv">@Loc["Heading"]</h2>
-<ul class="list-inline margin-bottom-none">
 @foreach (var culture in SupportedCultures)
 {
 	@if (!culture.Equals(CurrentCulture))
 	{
-		<li @key="culture" id="wet-fullhd-lang">
-			<a href="@GetLink(culture)"
-				class="link"
-				hreflang="@culture.TwoLetterISOLanguageName"
-				lang="@culture.TwoLetterISOLanguageName"
-				>
-				@Loc[culture.Name]
-			</a>
-		</li>
+		<MudLink key="@culture" lang="@culture.TwoLetterISOLanguageName" hreflang="@culture.TwoLetterISOLanguageName"
+		         Href="@GetLink(culture)">
+			@Loc[culture.Name]
+		</MudLink>
 	}
 }
-</ul>
 
 @code {
 	// This component is used to select the culture. However, it's not directly dispatching a Flux action to request
