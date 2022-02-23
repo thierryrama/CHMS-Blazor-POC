@@ -17,17 +17,21 @@
         <MudSpacer />
         <SignedInUser/>
     </MudAppBar>
-	<MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-		<MudDrawerHeader LinkToIndex="true" Class="flex-column">
-			<MudImage Src="./sig-blk-en.svg"/>
-			<MudText Typo="Typo.h6">
-				@Loc["AppName"]
+	<MudDrawer @bind-Open="_drawerOpen" ClipMode="@DrawerClipMode.Always" Elevation="1" Variant="@DrawerVariant.Mini">
+		@if (_drawerOpen)
+		{
+			<MudDrawerHeader LinkToIndex="true" Class="flex-column">
+				<MudImage Src="./sig-blk-en.svg"/>
+				<MudText Typo="Typo.subtitle2">
+					@Loc["AppName"]
+				</MudText>
+			</MudDrawerHeader>
+
+			<MudText Class="pe-6" Align="Align.Right">
+				<CultureSelector CurrentCulture="@CultureManager.CurrentCulture" SupportedCultures="@CultureManager.SupportedCultures"/>
 			</MudText>
-		</MudDrawerHeader>
-		<MudText Class="pe-6" Align="Align.Right">
-			<CultureSelector CurrentCulture="@CultureManager.CurrentCulture" SupportedCultures="@CultureManager.SupportedCultures"/>
-		</MudText>
-		<MudDivider Class="my-2"/>
+			<MudDivider Class="my-2"/>
+		}
 		<NavMenu/>
 	</MudDrawer>
 	<MudMainContent>

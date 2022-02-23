@@ -6,16 +6,11 @@
 @inject IStringLocalizer<NavMenu> Loc
 
 <MudNavMenu>
-	<MudNavLink Href="/search" Icon="@Icons.Filled.Search">@Loc["Search"]</MudNavLink>
-	<MudNavLink Href="/cases">@Loc["Cases"]</MudNavLink>
-	<MudNavGroup Title="@Loc["Booking"]">
-		<MudNavLink Href="/calendar-calendrier">@Loc["Calendar"]</MudNavLink>
-		<MudNavLink Href="/defaultDayTemplate">@Loc["DefaultDayTemplate"]</MudNavLink>
-		<MudNavLink Href="/defaultSiteTemplate">@Loc["DefaultSiteTemplate"]</MudNavLink>
-		<MudNavLink Href="/createSite">@Loc["CreateSite"]</MudNavLink>
-	</MudNavGroup>
-	<MudNavLink Href="/collection">@Loc["Collection"]</MudNavLink>
-	<MudNavLink Href="/users">@Loc["Users"]</MudNavLink>
-	<MudNavLink Href="reports">@Loc["Reports"]</MudNavLink>
-	<MudNavLink Href="sites">@Loc["Sites"]</MudNavLink>
+	<MudNavLink Href="/search" Icon="@Icons.Filled.Search" Title="@Loc["Search"]">@Loc["Search"]</MudNavLink>
+	<MudNavLink Href="/cases" Icon="@Icons.Filled.Assignment" Title="@Loc["Cases"]">@Loc["Cases"]</MudNavLink>
+	<MudNavLink Href="/calendar-calendrier" Icon="@Icons.Filled.CalendarMonth" Title="@Loc["Calendar"]">@Loc["Calendar"]</MudNavLink>
+	<MudNavLink Href="/sites" Icon="@Icons.Filled.LocationCity" Title="@Loc["Sites"]">@Loc["Sites"]</MudNavLink>
+	<MudNavLink Href="/users" Icon="@Icons.Filled.SupervisedUserCircle" Title="@Loc["Users"]">@Loc["Users"]</MudNavLink>
+	<MudNavLink Href="/reports" Icon="@Icons.Filled.FactCheck" Title="@Loc["Reports"]">@Loc["Reports"]</MudNavLink>
+	<MudNavLink Href="/lims" Icon="@Icons.Filled.LocalDrink" Title="@Loc["Labs"]">@Loc["Labs"]</MudNavLink>
 </MudNavMenu>
