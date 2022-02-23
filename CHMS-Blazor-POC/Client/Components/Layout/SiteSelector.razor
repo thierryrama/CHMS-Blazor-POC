@@ -1,7 +1,7 @@
 ﻿@inherits CultureChangeAwareComponent
 @inject SiteSelectorViewModel ViewModel
 
-<MudPaper id="site-selector" Elevation="0" Square="true" Outlined="false" Class="mud-theme-primary">
+<MudPaper id="site-selector" Elevation="0" Square="true" Outlined="false" Class="mud-theme-transparent">
     <MudSelect T="SiteSelectorViewModel.SelectableSite"
                ToStringFunc="selectableSite => selectableSite.Site.Name"
                AnchorOrigin="Origin.BottomCenter"

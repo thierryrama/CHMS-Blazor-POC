@@ -5,7 +5,7 @@
 @inject CultureManager CultureManager
 
 <Radzen.Blazor.RadzenDialog />
-<MudThemeProvider/>
+<MudThemeProvider Theme="@_theme"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
@@ -35,7 +35,7 @@
 			@Body
 		</MudContainer>
 		<footer>
-			<MudPaper Square="true" Elevation="0" Class="mt-4" Style="@($"height: {_theme.LayoutProperties.AppbarHeight}; background: #26374a url('./theme-gc-web/assets/landscape.png') no-repeat right bottom;")"/>
+			<MudPaper Square="true" Elevation="0" Class="mt-4" Style="@($"height: {_theme.LayoutProperties.AppbarHeight}; background: {_theme.Palette.AppbarBackground} url('./theme-gc-web/assets/landscape.png') no-repeat right bottom;")"/>
 			<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
 				<MudGrid>
 					<MudItem xs="6" Class="d-md-none d-lg-none">To the top</MudItem>
@@ -51,7 +51,13 @@
 </MudLayout>
 
 @code {
-	private readonly MudTheme _theme = new();
+	private readonly MudTheme _theme = new()
+	{
+		Palette = new Palette
+		{
+			AppbarBackground = "#26374a"
+		}
+	};
 	
 	private bool _drawerOpen = true;
 
