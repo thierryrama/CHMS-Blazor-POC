@@ -5,7 +5,8 @@
     <meta charset="utf-8" />
     <title>CHMS-Blazor-POC</title>
     <link href="./theme-gc-web/assets/favicon.ico" rel="icon" type="image/x-icon">
-    <link href="_content/Radzen.Blazor/css/standard-base.css" rel="stylesheet" >
+    <link href="_content/Radzen.Blazor/css/standard.css" rel="stylesheet" >
+    <link href="_content/toast_ui.blazor_Calendar/TUI.blazorCalendar.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
@@ -13,7 +14,7 @@
     <link href="manifest.json" rel="manifest" />
 </head>
 
-<body vocab="http://schema.org/" resource="#wb-webpage" typeof="WebPage">
+<body vocab="http://schema.org/" resource="#wb-webpage" typeof="WebPage" class="rz-default-scrollbars">
     <div id="app">
         Loading / Chargement
     </div>
@@ -25,6 +26,7 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script src="_content/toast_ui.blazor_calendar/TUI.blazor_calendar.min.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>

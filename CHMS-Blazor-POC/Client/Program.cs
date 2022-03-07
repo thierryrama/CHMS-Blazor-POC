@@ -9,6 +9,7 @@ using SoloX.BlazorJsonLocalization.WebAssembly;
 using StatCan.Chms.Client;
 using StatCan.Chms.Client.Models;
 using StatCan.Chms.Client.OpenApi;
+using StatCan.Chms.Client.OpenApi.ViewModels.CalendarToastUI;
 using StatCan.Chms.Client.Services;
 using StatCan.Chms.Client.Store.CultureSelection;
 using StatCan.Chms.Client.ViewModels.Layout;
@@ -49,6 +50,7 @@ builder.Services.AddSingleton<CycleService>();
 builder.Services.AddTransient<SignedInUserViewModel>();
 builder.Services.AddTransient<SiteSelectorViewModel>();
 builder.Services.AddTransient<CurrentSiteViewModel>();
+builder.Services.AddTransient<CalendarViewModel>();
 
 // Add the following
 var currentAssembly = typeof(Program).Assembly;
