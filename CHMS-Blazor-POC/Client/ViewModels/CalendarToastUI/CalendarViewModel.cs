@@ -68,7 +68,8 @@ public class CalendarViewModel : BaseViewModel
         //Set the Calendar Options
         CalendarOptions = new TUICalendarOptions()
         {
-            useCreationPopup = true,
+            // Turn this back to "true" to enable the default schedule creation dialog
+            useCreationPopup = false,
             useDetailPopup = true,
             defaultView = TUICalendarViewName.Month,
             taskView = false,
