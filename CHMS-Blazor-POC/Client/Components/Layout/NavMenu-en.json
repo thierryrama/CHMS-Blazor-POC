@@ -9,7 +9,8 @@
   "DefaultSiteTemplate": "Default site schedule template",
   "CreateSite": "Create site",
   "Collection": "Collection",
-  "Users": "Users",
+  "Users": "Users and Roles",
   "Reports": "Reports",
-  "Sites": "Sites"
+  "Sites": "Sites",
+  "Labs": "LIMS"
 }

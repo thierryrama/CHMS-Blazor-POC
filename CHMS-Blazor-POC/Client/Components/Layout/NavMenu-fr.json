@@ -9,7 +9,8 @@
   "DefaultSiteTemplate": "[FR] Default site schedule template",
   "CreateSite": "[FR] Create site",
   "Collection": "[FR] Collection",
-  "Users": "[FR] Users",
+  "Users": "[FR] Users and Roles",
   "Reports": "[FR] Reports",
-  "Sites": "[FR] Sites"
+  "Sites": "[FR] Sites",
+  "Labs": "[FR] LIMS"
 }
